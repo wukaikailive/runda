@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">RunDa</string>
+
+
+    <string name="action_settings">Settings</string>
+    <color name="dark_blue">#b2ebf2</color>
+    <string name="title_activity_register">RegisterActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    
+    <string name="user_rule">
+        1、我们不会收集您的任何未授权给我们的信息。\n
+        2、我们不会泄露您的任何信息。\n
+        3、我们可能会默认发点小广告。\n
+        4、您可以通过本软件进行桶装水的订购。\n
+        5、同意此协议表示用户保证所填写的个人信息真实有效，润达不为此负任何责任。\n
+    </string>
+    <string name="register_attention_step_2">
+        注意：\n
+        请填写你的常用号码，方便送水小哥联系你。\n
+        首先你得通过验证，点击验证按钮进行验证\n
+        若验证成功即可继续下一步，否则请查阅失败信息进行相应调整\n
+    </string>
+    <string name="register_attention_step_3">
+        提示：\n
+        请填写您真实的地址，这样送水小哥才能很快找到你\n
+        格式：如 xx镇xx街xx小区xx单元xx楼xx门牌号\n
+                 xx区xx村xx路xx门牌号\n
+        当然你不一定要这样填写，你觉得送水小哥能找到就好..
+        你还可以在最后加上一些额外信息，比如最里面那栋、红色房子、2楼、我是某某某经常来订水\n
+    </string>
+</resources>

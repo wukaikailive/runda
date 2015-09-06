@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.google.runda" >
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/water"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.AppCompat.Light" >
+        <activity
+            android:name=".activity.FirstActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.UserActivity" />
+        <activity android:name=".activity.AboutActivity" />
+        <activity
+            android:name=".activity.RegisterActivity">
+        </activity>
+        <activity android:name=".activity.register.RegisterActivityStep1"
+            android:theme="@style/AnimActivityTheme"></activity>
+        <activity android:name=".activity.register.RegisterActivityStep2"
+            android:theme="@style/AnimActivityTheme"></activity>
+        <activity android:name=".activity.register.RegisterActivityStep3"
+            android:theme="@style/AnimActivityTheme"></activity>
+        <activity android:name=".activity.WatersActivity"
+            android:theme="@style/AnimActivityTheme"></activity>
+        <activity android:name=".activity.WaterDetailActivity"
+            android:theme="@style/AnimActivityTheme"></activity>
+        <activity android:name=".activity.feedback.FeedBackActivity"></activity>
+        <activity android:name=".activity.feedback.FeedBackSuccessActivity"></activity>
+    </application>
+
+</manifest>

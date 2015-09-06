@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#e1bee7"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btn_reserve"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@drawable/bg_special_disease_circle"
+                android:text="订水" />
+
+            <Button
+                android:id="@+id/btn_send"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/bg_special_disease_circle_blue"
+                android:text="送水" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btn_exit"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:background="@drawable/bg_special_disease_circle_dark"
+                android:text="退出" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="bottom|center"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="服务器地址:"/>
+        <EditText
+            android:id="@+id/et_server_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="http://ifuxs.cn"/>
+        <Button
+            android:id="@+id/btn_ok"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_special_disease_circle"
+            android:text="Ok"
+            />
+        </LinearLayout>
+</FrameLayout>
