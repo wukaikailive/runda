@@ -10,6 +10,8 @@
 >>>main
 >>>>assets
 >>>>java
+>>>>>com.google.runda
+>>>>>kankan.wheel.widget
 >>>>res
 >>>>AndroidManifest.xml
 >>>build.gradle
