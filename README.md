@@ -1,6 +1,8 @@
 # runda
 送水
 ====
+测试时请修改代码中/staticModel/ServerConfig 中的WAY_ROOT一项，改成你测试的服务器地址
+-------
 更新日志 2015/9/7
 -------
 接口需求：(post/get指客户端发送给服务器的方式，return指服务器返回数据给客户端)
