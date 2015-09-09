@@ -79,23 +79,23 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:gravity="center"
+            android:gravity="right"
             android:layout_height="wrap_content">
             <Button
-                android:id="@+id/btn_go"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/bg_special_disease_circle"
-                android:text="进入"/>
+                android:id="@+id/btn_detail"
+                android:layout_width="80dp"
+                android:layout_height="35dp"
+                android:textSize="14sp"
+                android:text="查看详情"/>
 
             <Button
-                android:id="@+id/btn_detail"
-                android:layout_width="35dp"
+                android:id="@+id/btn_go"
+                android:layout_width="80dp"
+                android:background="@color/primary_pressed"
                 android:layout_height="35dp"
-                android:layout_marginLeft="40dp"
-                android:textSize="10sp"
-                android:background="@drawable/bg_special_disease_circle_blue"
-                android:text="详情"/>
+                android:layout_marginLeft="5dp"
+                android:textSize="14sp"
+                android:text="进入订水"/>
             </LinearLayout>
     </LinearLayout>
 </LinearLayout>

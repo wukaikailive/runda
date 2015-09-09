@@ -126,22 +126,19 @@
 
                 <Button
                     android:id="@+id/btn_ok"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="20dp"
-                    android:background="@drawable/bg_special_disease_circle"
-                    android:text="确认"
-                    android:textSize="11sp" />
-
+                    android:layout_width="80dp"
+                    android:layout_height="35dp"
+                    android:textSize="14sp"
+                    android:text="查看详情"/>
 
                 <Button
                     android:id="@+id/btn_detail"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="25dp"
-                    android:background="@drawable/bg_special_disease_circle_blue"
-                    android:text="详情"
+                    android:layout_width="80dp"
+                    android:background="@color/primary_pressed"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="5dp"
+                    android:textSize="14sp"
+                    android:text="确认"/>
                     android:textSize="11sp" />
             </LinearLayout>
 
