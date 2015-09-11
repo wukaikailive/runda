@@ -24,15 +24,15 @@ import de.greenrobot.event.EventBus;
  */
 public class FeedBackActivity extends Activity implements View.OnClickListener {
 
-    /*·´À¡µÄÎÊÌâÀàĞÍ*/
+    /*åé¦ˆçš„é—®é¢˜ç±»å‹*/
     RadioGroup mRGFeedbackType;
-    /*·´À¡ÕßÓÊÏä*/
+    /*åé¦ˆè€…é‚®ç®±*/
     EditText mEditEmail;
-    /*·´À¡ÄÚÈİ*/
+    /*åé¦ˆå†…å®¹*/
     EditText mEditContent;
-    /*Ìá½»·´À¡*/
+    /*æäº¤åé¦ˆ*/
     Button mBtnSubmit;
-    /*ÍË³ö·´À¡*/
+    /*é€€å‡ºåé¦ˆ*/
     Button mBtnBack;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,12 +112,12 @@ public class FeedBackActivity extends Activity implements View.OnClickListener {
 
     public void onEventMainThread(AddFeedBackSucceedEvent event){
         startActivity(new Intent(this, FeedBackSuccessActivity.class));
-        //½áÊø×Ô¼º
+        //ç»“æŸè‡ªå·±
         this.finish();
     }
 
     public void onEventMainThread(AddFeedBackFailEvent event){
-        Log.e("ÊÕµ½·´À¡Ê§°ÜÏûÏ¢", "" + event.getMessage());
+        Log.e("æ”¶åˆ°åé¦ˆå¤±è´¥æ¶ˆæ¯", "" + event.getMessage());
         Toast.makeText(this, "" + event.getMessage(), Toast.LENGTH_LONG).show();
     }
 }

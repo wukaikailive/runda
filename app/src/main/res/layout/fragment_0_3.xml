@@ -1,39 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:orientation="vertical">
 
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="正在进行的订单"
+            android:textColor="@color/primary_pressed"
+            android:textSize="30sp"/>
+    </LinearLayout>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/lila_stores"
-        android:background="@color/white"
-        android:orientation="vertical">
+        android:background="@color/white">
 
-        <com.google.runda.view.XListView
-            android:id="@android:id/list"
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/lila_stores"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:divider="#e0e0e0"
-            android:dividerHeight="1dp"></com.google.runda.view.XListView>
-    </LinearLayout>
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <com.google.runda.view.XListView
+                android:id="@android:id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:divider="#e0e0e0"
+                android:dividerHeight="1dp"></com.google.runda.view.XListView>
+        </LinearLayout>
 
 
-    <include
-        layout="@layout/layout_loading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        <include
+            layout="@layout/layout_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
 
-        android:layout_margin="16dp"></include>
+            android:layout_margin="16dp"></include>
 
-    <include
-        layout="@layout/layout_load_fail"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="16dp">
-    </include>
+        <include
+            layout="@layout/layout_load_fail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="16dp">
 
-</FrameLayout>
+        </include>
+
+    </FrameLayout>
+</LinearLayout>

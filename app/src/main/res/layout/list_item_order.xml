@@ -4,17 +4,6 @@
     android:layout_height="match_parent"
     android:background="#eeeeee"
     android:orientation="vertical">
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="正在进行的订单"
-            android:textColor="@color/primary_pressed"
-            android:textSize="30sp"/>
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,7 +19,7 @@
             >
 
             <TextView
-                android:id="@+id/tvStoreName"
+                android:id="@+id/tv_store_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
@@ -38,7 +27,7 @@
                 android:textSize="20dp" />
 
             <TextView
-                android:id="@+id/tvStatus"
+                android:id="@+id/tv_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.75"
@@ -49,7 +38,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:background="@drawable/top-border"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -85,12 +73,14 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_price"
                     android:layout_gravity="right"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="¥9.00"/>
 
                 <TextView
+                    android:id="@+id/tv_num"
                     android:layout_gravity="right"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -105,16 +95,17 @@
         <LinearLayout
             android:gravity="center|right"
             android:layout_width="match_parent"
-            android:background="@drawable/top-border"
             android:layout_height="30dp">
 
             <TextView
+                android:id="@+id/tv_total_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="10sp"
                 android:text="2件商品"/>
 
             <TextView
+                android:id="@+id/tv_total_price"
                 android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -125,18 +116,17 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:background="@drawable/top-border"
             android:gravity="right"
             android:layout_height="wrap_content">
             <Button
-                android:id="@+id/btn_go"
+                android:id="@+id/btn_detail"
                 android:layout_width="80dp"
                 android:layout_height="35dp"
                 android:textSize="14sp"
                 android:text="查看详情"/>
 
             <Button
-                android:id="@+id/btn_detail"
+                android:id="@+id/btn_ensure"
                 android:layout_width="80dp"
                 android:background="@color/primary_pressed"
                 android:layout_height="35dp"
