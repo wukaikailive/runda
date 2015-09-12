@@ -36,6 +36,7 @@
             android:theme="@style/AnimActivityTheme"></activity>
         <activity android:name=".activity.feedback.FeedBackActivity"></activity>
         <activity android:name=".activity.feedback.FeedBackSuccessActivity"></activity>
+        <activity android:name=".activity.order.OrderEnsureActivity"></activity>
     </application>
 
 </manifest>
