@@ -3,6 +3,7 @@ package com.google.runda.activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.runda.R;
+import com.google.runda.activity.order.OrderEnsureActivity;
 import com.google.runda.event.PullCommoditiesBasicFailEvent;
 import com.google.runda.event.PullCommoditiesBasicSucceedEvent;
 import com.google.runda.event.PullStoresFailEvent;
@@ -158,7 +160,7 @@ public class WatersActivity extends ListActivity implements XListView.IXListView
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            final Commodity commodity= (Commodity) commodities.get(position);
+            final Commodity commodity= commodities.get(position);
             Holder holder=null;
             if (convertView==null)
             {
@@ -229,7 +231,14 @@ public class WatersActivity extends ListActivity implements XListView.IXListView
             holder.btnOk.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(WatersActivity.this,"此功能将在晚一些推出",Toast.LENGTH_SHORT).show();
+                    String num=finalHolder.etNum.getText().toString();
+                    Intent intent=new Intent(WatersActivity.this, OrderEnsureActivity.class);
+                    Bundle bundle=new Bundle();
+                    bundle.putString("num",num);
+                    bundle.putString("waterStoreName", storeName);
+                    bundle.putSerializable("commodity", commodity);
+                    Log.e("wukaikai", "启动确认订单界面");
+                   startActivity(intent);
                 }
             });
             return convertView;

@@ -1,9 +1,11 @@
 package com.google.runda.model;
 
+import java.io.Serializable;
+
 /**
  * Created by wukai on 2015/5/9.
  */
-public class Commodity {
+public class Commodity implements Serializable {
 
     public String id;
     public String waterStoreID;
