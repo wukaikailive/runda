@@ -61,7 +61,7 @@ public class FeedBack {
                     EventBus.getDefault().post(new AddFeedBackFailEvent(result.get("message")));
                 }
             }catch (JSONException e) {
-                EventBus.getDefault().post(new AddFeedBackFailEvent("Êı¾İ½âÎö´íÎó "+jsonString));
+                EventBus.getDefault().post(new AddFeedBackFailEvent("æ•°æ®è§£æé”™è¯¯ "+jsonString));
                 e.printStackTrace();
             }catch (Exception e){
                 EventBus.getDefault().post(new AddFeedBackFailEvent(e.getLocalizedMessage()));

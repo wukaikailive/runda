@@ -1,295 +1,311 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_below="@+id/top_relative"
-    android:background="@color/white"
-    android:fadingEdge="none">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:paddingBottom="60.0dip"
-        android:paddingLeft="10.0dip"
-        android:paddingRight="10.0dip"
-        android:paddingTop="10.0dip">
+        android:layout_margin="5dp">
 
         <TextView
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10.0dip"
-            android:layout_marginTop="10.0dip"
-            android:gravity="center_vertical"
-            android:paddingLeft="4.0dip"
-            android:text="我的设置"
-            android:textColor="#ff888888"
-            android:textSize="16.0sp" />
+            android:text="设置"
+            android:textColor="@color/primary_pressed"
+            android:textSize="30sp" />
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-
-            <TableLayout
-                android:id="@+id/MorePageTableLayout_Follow"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="1.0dip"
-                android:shrinkColumns="0"
-                android:stretchColumns="0">
-
-                <TableRow
-                    android:id="@+id/more_page_row1"
-                    android:layout_width="fill_parent"
-                    android:layout_marginLeft="2.0dip"
-                    android:layout_marginRight="2.0dip"
-                    android:paddingBottom="16.0dip"
-                    android:paddingTop="16.0dip">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:drawablePadding="10.0dip"
-                        android:gravity="center_vertical"
-                        android:includeFontPadding="false"
-                        android:paddingLeft="17.0dip"
-                        android:text="订单更新提醒"
-                        android:textColor="#ff333333"
-                        android:textSize="16.0sp" />
-
-                    <CheckBox
-                        android:id="@+id/checkBoxIsAllowOrderUpdate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_column="1"
-                        android:checked="true" />
-
-
-                </TableRow>
-
-                <TableRow
-                    android:id="@+id/more_page_row2"
-                    android:layout_width="fill_parent"
-                    android:layout_marginLeft="2.0dip"
-                    android:layout_marginRight="2.0dip"
-                    android:paddingBottom="16.0dip"
-                    android:paddingTop="16.0dip">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:drawablePadding="10.0dip"
-                        android:gravity="center_vertical"
-                        android:includeFontPadding="false"
-                        android:paddingLeft="17.0dip"
-                        android:text="允许推送广告"
-                        android:textColor="#ff333333"
-                        android:textSize="16.0sp" />
-
-                    <CheckBox
-                        android:id="@+id/checkBoxIsAllowAd"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_column="1"
-                        android:checked="true" />
-
-
-                </TableRow>
-
-                <TableRow
-                    android:id="@+id/more_page_row3"
-                    android:layout_width="fill_parent"
-                    android:layout_marginLeft="2.0dip"
-                    android:layout_marginRight="2.0dip"
-                    android:paddingBottom="16.0dip"
-                    android:paddingTop="16.0dip">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:drawablePadding="10.0dip"
-                        android:gravity="center_vertical"
-                        android:includeFontPadding="false"
-                        android:paddingLeft="17.0dip"
-                        android:text="总是需要登陆"
-                        android:textColor="#ff333333"
-                        android:textSize="16.0sp" />
-
-
-                    <CheckBox
-                        android:id="@+id/checkBoxIsAlwaysNeedLogin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_column="1"
-                        android:layout_gravity="right"
-                        android:gravity="center_vertical"
-                        android:paddingRight="20.0dip" />
-
-                </TableRow>
-
-                <TableRow
-                    android:id="@+id/page_row_text_setting"
-                    android:visibility="gone"
-                    android:layout_width="fill_parent"
-                    android:layout_marginLeft="2.0dip"
-                    android:layout_marginRight="2.0dip"
-                    android:paddingBottom="16.0dip"
-                    android:paddingTop="16.0dip">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:drawablePadding="10.0dip"
-                        android:gravity="center_vertical"
-                        android:includeFontPadding="false"
-                        android:paddingLeft="17.0dip"
-                        android:text="字体大小"
-                        android:textColor="#ff333333"
-                        android:textSize="16.0sp" />
-
-
-                    <TextView
-                        android:id="@+id/textSize"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawablePadding="10.0dip"
-                        android:gravity="center_vertical"
-                        android:includeFontPadding="false"
-                        android:paddingLeft="17.0dip"
-                        android:text="中"
-                        android:textColor="@android:color/holo_blue_light"
-                        android:textSize="16.0sp" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:layout_gravity="right"
-                        android:gravity="center_vertical"
-                        android:paddingRight="20.0dip"
-                        android:src="@drawable/ic_arrow" />
-
-                </TableRow>
-            </TableLayout>
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10.0dip"
-            android:layout_marginTop="10.0dip"
-            android:gravity="center_vertical"
-            android:paddingLeft="4.0dip"
-            android:text="其他"
-            android:textColor="#ff888888"
-            android:textSize="16.0sp" />
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-
-            <TableLayout
-                android:id="@+id/MorePageTableLayout_Client"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="1.0dip"
-                android:shrinkColumns="0"
-                android:stretchColumns="0">
-
-                <TableRow
-                    android:id="@+id/more_page_row_feedback"
-                    android:layout_width="fill_parent"
-                    android:layout_marginLeft="2.0dip"
-                    android:layout_marginRight="2.0dip"
-                    android:paddingBottom="16.0dip"
-                    android:paddingTop="16.0dip"
-                    android:background="@drawable/tabrow_selector">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:drawableLeft="@drawable/feedback"
-                        android:drawablePadding="10.0dip"
-                        android:gravity="center_vertical"
-                        android:includeFontPadding="false"
-                        android:paddingLeft="17.0dip"
-                        android:text="意见反馈"
-                        android:textColor="#ff333333"
-                        android:textSize="16.0sp"
-                        />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="20dp"
-                        android:layout_gravity="right"
-                        android:gravity="center_vertical"
-                        android:paddingRight="20.0dip"
-                        android:src="@drawable/ic_arrow" />
-                </TableRow>
-
-                <TableRow
-                    android:id="@+id/more_page_row_check_update"
-                    android:layout_width="fill_parent"
-                    android:layout_marginLeft="2.0dip"
-                    android:layout_marginRight="2.0dip"
-                    android:paddingBottom="16.0dip"
-                    android:paddingTop="16.0dip"
-                    android:background="@drawable/tabrow_selector"
-                    >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:drawableLeft="@drawable/check_update"
-                        android:drawablePadding="10.0dip"
-                        android:gravity="center_vertical"
-                        android:includeFontPadding="false"
-                        android:paddingLeft="17.0dip"
-                        android:text="检测更新"
-                        android:textColor="#ff333333"
-                        android:textSize="16.0sp"
-                        />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="20dp"
-                        android:layout_gravity="right"
-                        android:gravity="center_vertical"
-                        android:paddingRight="20.0dip"
-                        android:src="@drawable/ic_arrow" />
-                </TableRow>
-
-                <TableRow
-                    android:id="@+id/more_page_row_about"
-                    android:layout_width="fill_parent"
-                    android:layout_marginLeft="2.0dip"
-                    android:layout_marginRight="2.0dip"
-                    android:paddingBottom="16.0dip"
-                    android:paddingTop="16.0dip"
-                    android:background="@drawable/tabrow_selector">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:drawableLeft="@drawable/about"
-                        android:drawablePadding="10.0dip"
-                        android:gravity="center_vertical"
-                        android:includeFontPadding="false"
-                        android:paddingLeft="17.0dip"
-                        android:text="关于"
-                        android:textColor="#ff333333"
-                        android:textSize="16.0sp"
-                        />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="20dp"
-                        android:layout_gravity="right"
-                        android:gravity="center_vertical"
-                        android:paddingRight="20.0dip"
-                        android:src="@drawable/ic_arrow" />
-                </TableRow>
-            </TableLayout>
-        </LinearLayout>
     </LinearLayout>
-</ScrollView>
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/top_relative"
+        android:background="@color/white"
+        android:fadingEdge="none">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingBottom="60.0dip"
+            android:paddingLeft="10.0dip"
+            android:paddingRight="10.0dip"
+            android:paddingTop="10.0dip">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10.0dip"
+                android:layout_marginTop="10.0dip"
+                android:gravity="center_vertical"
+                android:paddingLeft="4.0dip"
+                android:text="我的设置"
+                android:textColor="#ff888888"
+                android:textSize="16.0sp" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <TableLayout
+                    android:id="@+id/MorePageTableLayout_Follow"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="1.0dip"
+                    android:shrinkColumns="0"
+                    android:stretchColumns="0">
+
+                    <TableRow
+                        android:id="@+id/more_page_row1"
+                        android:layout_width="fill_parent"
+                        android:layout_marginLeft="2.0dip"
+                        android:layout_marginRight="2.0dip"
+                        android:paddingBottom="16.0dip"
+                        android:paddingTop="16.0dip">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:drawablePadding="10.0dip"
+                            android:gravity="center_vertical"
+                            android:includeFontPadding="false"
+                            android:paddingLeft="17.0dip"
+                            android:text="订单更新提醒"
+                            android:textColor="#ff333333"
+                            android:textSize="16.0sp" />
+
+                        <CheckBox
+                            android:id="@+id/checkBoxIsAllowOrderUpdate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_column="1"
+                            android:checked="true" />
+
+
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/more_page_row2"
+                        android:layout_width="fill_parent"
+                        android:layout_marginLeft="2.0dip"
+                        android:layout_marginRight="2.0dip"
+                        android:paddingBottom="16.0dip"
+                        android:paddingTop="16.0dip">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:drawablePadding="10.0dip"
+                            android:gravity="center_vertical"
+                            android:includeFontPadding="false"
+                            android:paddingLeft="17.0dip"
+                            android:text="允许推送广告"
+                            android:textColor="#ff333333"
+                            android:textSize="16.0sp" />
+
+                        <CheckBox
+                            android:id="@+id/checkBoxIsAllowAd"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_column="1"
+                            android:checked="true" />
+
+
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/more_page_row3"
+                        android:layout_width="fill_parent"
+                        android:layout_marginLeft="2.0dip"
+                        android:layout_marginRight="2.0dip"
+                        android:paddingBottom="16.0dip"
+                        android:paddingTop="16.0dip">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:drawablePadding="10.0dip"
+                            android:gravity="center_vertical"
+                            android:includeFontPadding="false"
+                            android:paddingLeft="17.0dip"
+                            android:text="总是需要登陆"
+                            android:textColor="#ff333333"
+                            android:textSize="16.0sp" />
+
+
+                        <CheckBox
+                            android:id="@+id/checkBoxIsAlwaysNeedLogin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_column="1"
+                            android:layout_gravity="right"
+                            android:gravity="center_vertical"
+                            android:paddingRight="20.0dip" />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/page_row_text_setting"
+                        android:layout_width="fill_parent"
+                        android:layout_marginLeft="2.0dip"
+                        android:layout_marginRight="2.0dip"
+                        android:paddingBottom="16.0dip"
+                        android:paddingTop="16.0dip"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:drawablePadding="10.0dip"
+                            android:gravity="center_vertical"
+                            android:includeFontPadding="false"
+                            android:paddingLeft="17.0dip"
+                            android:text="字体大小"
+                            android:textColor="#ff333333"
+                            android:textSize="16.0sp" />
+
+
+                        <TextView
+                            android:id="@+id/textSize"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="10.0dip"
+                            android:gravity="center_vertical"
+                            android:includeFontPadding="false"
+                            android:paddingLeft="17.0dip"
+                            android:text="中"
+                            android:textColor="@android:color/holo_blue_light"
+                            android:textSize="16.0sp" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:layout_gravity="right"
+                            android:gravity="center_vertical"
+                            android:paddingRight="20.0dip"
+                            android:src="@drawable/ic_arrow" />
+
+                    </TableRow>
+                </TableLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10.0dip"
+                android:layout_marginTop="10.0dip"
+                android:gravity="center_vertical"
+                android:paddingLeft="4.0dip"
+                android:text="其他"
+                android:textColor="#ff888888"
+                android:textSize="16.0sp" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <TableLayout
+                    android:id="@+id/MorePageTableLayout_Client"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="1.0dip"
+                    android:shrinkColumns="0"
+                    android:stretchColumns="0">
+
+                    <TableRow
+                        android:id="@+id/more_page_row_feedback"
+                        android:layout_width="fill_parent"
+                        android:layout_marginLeft="2.0dip"
+                        android:layout_marginRight="2.0dip"
+                        android:background="@drawable/tabrow_selector"
+                        android:paddingBottom="16.0dip"
+                        android:paddingTop="16.0dip">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:drawableLeft="@drawable/feedback"
+                            android:drawablePadding="10.0dip"
+                            android:gravity="center_vertical"
+                            android:includeFontPadding="false"
+                            android:paddingLeft="17.0dip"
+                            android:text="意见反馈"
+                            android:textColor="#ff333333"
+                            android:textSize="16.0sp" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"
+                            android:layout_gravity="right"
+                            android:gravity="center_vertical"
+                            android:paddingRight="20.0dip"
+                            android:src="@drawable/ic_arrow" />
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/more_page_row_check_update"
+                        android:layout_width="fill_parent"
+                        android:layout_marginLeft="2.0dip"
+                        android:layout_marginRight="2.0dip"
+                        android:background="@drawable/tabrow_selector"
+                        android:paddingBottom="16.0dip"
+                        android:paddingTop="16.0dip">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:drawableLeft="@drawable/check_update"
+                            android:drawablePadding="10.0dip"
+                            android:gravity="center_vertical"
+                            android:includeFontPadding="false"
+                            android:paddingLeft="17.0dip"
+                            android:text="检测更新"
+                            android:textColor="#ff333333"
+                            android:textSize="16.0sp" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"
+                            android:layout_gravity="right"
+                            android:gravity="center_vertical"
+                            android:paddingRight="20.0dip"
+                            android:src="@drawable/ic_arrow" />
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/more_page_row_about"
+                        android:layout_width="fill_parent"
+                        android:layout_marginLeft="2.0dip"
+                        android:layout_marginRight="2.0dip"
+                        android:background="@drawable/tabrow_selector"
+                        android:paddingBottom="16.0dip"
+                        android:paddingTop="16.0dip">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:drawableLeft="@drawable/about"
+                            android:drawablePadding="10.0dip"
+                            android:gravity="center_vertical"
+                            android:includeFontPadding="false"
+                            android:paddingLeft="17.0dip"
+                            android:text="关于"
+                            android:textColor="#ff333333"
+                            android:textSize="16.0sp" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"
+                            android:layout_gravity="right"
+                            android:gravity="center_vertical"
+                            android:paddingRight="20.0dip"
+                            android:src="@drawable/ic_arrow" />
+                    </TableRow>
+                </TableLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

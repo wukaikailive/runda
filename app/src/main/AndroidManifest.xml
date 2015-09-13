@@ -38,6 +38,7 @@
         <activity android:name=".activity.feedback.FeedBackSuccessActivity"></activity>
         <activity android:name=".activity.order.OrderEnsureActivity"></activity>
         <activity android:name=".activity.order.OrderDetailActivity"></activity>
+        <activity android:name=".activity.user.ChangeInfoActivity"></activity>
     </application>
 
 </manifest>

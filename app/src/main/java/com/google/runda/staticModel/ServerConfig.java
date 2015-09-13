@@ -13,7 +13,7 @@ public class ServerConfig {
     /*服务器地址*/
     //public static final String WAY_ROOT ="http://192.168.1.155:8080";
   //  public static final String WAY_ROOT ="http://ifuxs.cn";
-    public static final String WAY_ROOT="http://192.168.1.4:8080";
+    public static final String WAY_ROOT="http://192.168.1.3:8080";
     /*注册地址*/
     public static final String WAY_USER_REGISTER=WAY_ROOT+"/"+"index.php?controller=Home&method=registerProc";
 
