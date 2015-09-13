@@ -1,5 +1,6 @@
 package com.google.runda.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.runda.R;
+import com.google.runda.activity.user.ChangeInfoActivity;
 import com.google.runda.bll.Config;
 import com.google.runda.bll.User;
 import com.google.runda.event.ExitLoginEvent;
@@ -47,6 +49,7 @@ public class MeFragment extends android.app.Fragment implements View.OnClickList
 
     private Button mBtnRetry;
     private Button mBtnToLogin;
+    private Button mBtnEdit;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,12 +90,14 @@ public class MeFragment extends android.app.Fragment implements View.OnClickList
         mLilaLoadFail = (LinearLayout) getView().findViewById(R.id.lila_load_user_info_error);
         mBtnRetry= (Button) getView().findViewById(R.id.btn_retry);
         mBtnToLogin= (Button) getView().findViewById(R.id.btn_to_login);
+        mBtnEdit= (Button) getView().findViewById(R.id.btnEdit);
 
         //注册监听事件
         btnExitLogin.setOnClickListener(this);
         floatingActionButton.setOnClickListener(this);
         mBtnRetry.setOnClickListener(this);
         mBtnToLogin.setOnClickListener(this);
+        mBtnEdit.setOnClickListener(this);
         bindUserData();
     }
 
@@ -129,6 +134,9 @@ public class MeFragment extends android.app.Fragment implements View.OnClickList
                 break;
             case R.id.btn_to_login:
                 EventBus.getDefault().post(new ExitLoginEvent());
+                break;
+            case R.id.btnEdit:
+                getActivity().startActivity(new Intent(getActivity(), ChangeInfoActivity.class));
                 break;
         }
     }

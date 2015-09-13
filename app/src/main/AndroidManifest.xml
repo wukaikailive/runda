@@ -37,6 +37,7 @@
         <activity android:name=".activity.feedback.FeedBackActivity"></activity>
         <activity android:name=".activity.feedback.FeedBackSuccessActivity"></activity>
         <activity android:name=".activity.order.OrderEnsureActivity"></activity>
+        <activity android:name=".activity.order.OrderDetailActivity"></activity>
     </application>
 
 </manifest>
