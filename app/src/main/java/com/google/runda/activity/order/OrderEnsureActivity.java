@@ -9,11 +9,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.runda.R;
+import com.google.runda.event.PlaceOrderFailEvent;
+import com.google.runda.event.PlaceOrderSucceedEvent;
 import com.google.runda.model.Commodity;
+import com.google.runda.model.PlaceOrderFormModel;
 import com.google.runda.staticModel.ServerConfig;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by bigface on 2015/9/12.
@@ -28,6 +35,7 @@ public class OrderEnsureActivity extends Activity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_order_ensure);
+        EventBus.getDefault().register(this);
         ensureOrderHolder=new EnsureOrderHolder();
         ensureOrderHolder.init();
         ensureOrderHolder.bindClickEvent(this);
@@ -36,10 +44,17 @@ public class OrderEnsureActivity extends Activity implements View.OnClickListene
         argModel.bindValueOfView();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
     class ArgModel{
         int num;//购买数量
         float totalPrice;//总价
         String storeName;//水站名字
+        int storeId;//水站ID
         com.google.runda.model.Commodity commodity;//水的详情
         com.google.runda.model.User user;//用户信息
 
@@ -47,6 +62,7 @@ public class OrderEnsureActivity extends Activity implements View.OnClickListene
             Bundle bundle=intent.getExtras();
             num=bundle.getInt("num");
             storeName=bundle.getString("waterStoreName");
+            storeId=bundle.getInt("storeId");
             commodity= (Commodity) bundle.getSerializable("commodity");
             user= ServerConfig.USER;
             totalPrice=Float.parseFloat(commodity.waterGoodsPrice)*num;
@@ -81,6 +97,21 @@ public class OrderEnsureActivity extends Activity implements View.OnClickListene
                 break;
             case R.id.btn_ensure_order:
                 //todo 确认收货 记得发送付款方式
+                com.google.runda.model.PlaceOrderFormModel model=new PlaceOrderFormModel();
+                model.recieverPersonName=ensureOrderHolder.tvReceiverName.getText().toString();
+                model.recieverPersonPhone=ensureOrderHolder.tvReceiverPhone.getText().toString();
+                model.recieverAddress=ensureOrderHolder.tvReceiverDetailAddress.getText().toString();
+                model.waterGoodsID= argModel.commodity.id;
+                model.waterGoodsCount= ensureOrderHolder.tvNum.getText().toString();
+                model.waterGoodsPrice= ensureOrderHolder.tvPrice.getText().toString();
+                model.recieverTime=ensureOrderHolder.tvSendTime.getText().toString();
+                model.remark=ensureOrderHolder.edtMessage.getText().toString();
+                model.waterStoreID=String.valueOf(argModel.storeId);
+
+                ensureOrderHolder.proBarWaitEnsureOrder.setVisibility(View.VISIBLE);
+                ensureOrderHolder.btnEnsureOrder.setEnabled(false);
+
+                new com.google.runda.bll.Order().beginPalceOrder(model);
                 break;
         }
     }
@@ -107,6 +138,7 @@ public class OrderEnsureActivity extends Activity implements View.OnClickListene
 
         TextView tvTotalPrice;//总价格
         Button btnEnsureOrder;//确认订单
+        ProgressBar proBarWaitEnsureOrder;//点击确认按钮后的进度条
 
         /**
          * find id,bind holder's view
@@ -130,6 +162,9 @@ public class OrderEnsureActivity extends Activity implements View.OnClickListene
 
             tvTotalPrice= (TextView)  findViewById(R.id.tv_total_price);
             btnEnsureOrder= (Button)  findViewById(R.id.btn_ensure_order);
+            proBarWaitEnsureOrder= (ProgressBar) findViewById(R.id.pro_bar_wait_ensure_order);
+
+            proBarWaitEnsureOrder.setVisibility(View.INVISIBLE);
         }
 
         public void bindClickEvent(View.OnClickListener listener){
@@ -139,4 +174,22 @@ public class OrderEnsureActivity extends Activity implements View.OnClickListene
             btnEnsureOrder.setOnClickListener(listener);
         }
     }
+
+
+    /**
+     * 事件处理
+     */
+    //下订单成功事件
+    public void onEventMainThread(PlaceOrderSucceedEvent event){
+        Toast.makeText(this,"下订单成功!",Toast.LENGTH_LONG).show();
+
+        this.finish();
+    }
+    //下订单失败事件
+    public void onEventMainThread(PlaceOrderFailEvent event){
+        Toast.makeText(this,"下订单失败啦!原因："+event.getMessage(),Toast.LENGTH_LONG).show();
+        ensureOrderHolder.proBarWaitEnsureOrder.setVisibility(View.INVISIBLE);
+        ensureOrderHolder.btnEnsureOrder.setEnabled(true);
+    }
+
 }

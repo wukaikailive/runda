@@ -85,7 +85,7 @@ public class ServerConfig {
 
 //order begin
     /*用户下订单*/
-    public static final String WAY_PLACE_ORDER=WAY_ROOT+"/"+"index.php?controller=Home&method= placeOrderPhone";
+    public static final String WAY_PLACE_ORDER=WAY_ROOT+"/"+"index.php?controller=Home&method=placeOrderPhone";
 
 
 //order end

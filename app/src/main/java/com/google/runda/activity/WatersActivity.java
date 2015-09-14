@@ -235,6 +235,7 @@ public class WatersActivity extends ListActivity implements XListView.IXListView
                     Intent intent=new Intent(WatersActivity.this, OrderEnsureActivity.class);
                     Bundle bundle=new Bundle();
                     bundle.putInt("num", num);
+                    bundle.putInt("storeId", Integer.parseInt(storeId));
                     bundle.putString("waterStoreName", storeName);
                     bundle.putSerializable("commodity", commodity);
                     intent.putExtras(bundle);
