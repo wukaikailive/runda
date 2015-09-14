@@ -114,4 +114,9 @@ public class Order {
             }
         }
     }
+
+    public String getPlaceOrderJson(){
+        return "ok";
+    }
+
 }

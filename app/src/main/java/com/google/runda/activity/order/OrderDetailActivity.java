@@ -8,7 +8,6 @@ import com.google.runda.R;
 
 /**
  * Created by bigface on 2015/9/12.
- * 订单确认界面
  */
 public class OrderDetailActivity extends Activity{
 

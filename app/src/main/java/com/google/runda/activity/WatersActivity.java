@@ -231,12 +231,13 @@ public class WatersActivity extends ListActivity implements XListView.IXListView
             holder.btnOk.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String num=finalHolder.etNum.getText().toString();
+                    int num=Integer.parseInt(finalHolder.etNum.getText().toString());
                     Intent intent=new Intent(WatersActivity.this, OrderEnsureActivity.class);
                     Bundle bundle=new Bundle();
-                    bundle.putString("num",num);
+                    bundle.putInt("num", num);
                     bundle.putString("waterStoreName", storeName);
                     bundle.putSerializable("commodity", commodity);
+                    intent.putExtras(bundle);
                     Log.e("wukaikai", "启动确认订单界面");
                    startActivity(intent);
                 }
