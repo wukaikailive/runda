@@ -1,6 +1,7 @@
 package com.google.runda.fragment;
 
 import android.app.ListFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.runda.R;
+import com.google.runda.activity.order.OrderDetailActivity;
 import com.google.runda.event.PullOrdersFailEvent;
 import com.google.runda.event.PullOrdersSucceedEvent;
 import com.google.runda.model.Order;
@@ -136,7 +138,7 @@ public class OrdersFragment extends ListFragment implements XListView.IXListView
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            final com.google.runda.model.Order order= (com.google.runda.model.Order) orders.get(position);
+            final com.google.runda.model.Order order= orders.get(position);
             Holder holder=null;
             if(convertView==null){
                 convertView = mInflater.inflate(R.layout.list_item_order, parent,false);
@@ -159,6 +161,14 @@ public class OrdersFragment extends ListFragment implements XListView.IXListView
 
             holder.tvStoreName.setText(order.WaterStoreName);
             holder.tvStatus.setText(String.valueOf(order.Status));
+            holder.btnDetail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent intent=new Intent(getActivity(), OrderDetailActivity.class);
+                    getActivity().startActivity(intent);
+                }
+            });
 //todo full
             return convertView;
         }

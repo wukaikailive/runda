@@ -18,29 +18,16 @@
 
 
             <Button
-                android:id="@+id/btn_cancel_order"
+                android:id="@+id/btn_delete_order"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:text="取消订单" />
+                android:text="删除订单" />
 
             <Button
-                android:id="@+id/btn_reminder_order"
+                android:id="@+id/btn_comment_order"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:text="催单" />
-
-            <Button
-                android:id="@+id/btn_delay_order"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="延迟收货" />
-
-            <Button
-                android:id="@+id/btn_ensure_order"
-                android:layout_width="80dp"
-                android:layout_height="40dp"
-                android:background="@android:color/holo_red_light"
-                android:text="确认收货" />
+                android:text="追加评价" />
 
         </LinearLayout>
 

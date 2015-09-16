@@ -111,6 +111,7 @@ public class OrderEnsureActivity extends Activity implements View.OnClickListene
                 ensureOrderHolder.proBarWaitEnsureOrder.setVisibility(View.VISIBLE);
                 ensureOrderHolder.btnEnsureOrder.setEnabled(false);
 
+                //下单开始
                 new com.google.runda.bll.Order().beginPalceOrder(model);
                 break;
         }

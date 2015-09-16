@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#eeeeee"
+    android:background="@color/white_dark"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginTop="10dp"
         android:background="@color/white"
         android:orientation="vertical">
 
@@ -22,6 +22,7 @@
                 android:id="@+id/tv_store_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:layout_weight="0.25"
                 android:text="store-name"
                 android:textSize="20dp" />
@@ -35,6 +36,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/lila_order_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -49,6 +51,7 @@
                     android:id="@+id/iv_water"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
+                    android:layout_marginLeft="10dp"
                     android:src="@drawable/water_default"/>
             </LinearLayout>
 
@@ -75,6 +78,7 @@
                 <TextView
                     android:id="@+id/tv_price"
                     android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="¥9.00"/>
@@ -85,6 +89,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#ff888888"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="5dp"
                     android:text="x2"/>
 
@@ -109,30 +114,19 @@
                 android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
                 android:textSize="11sp"
                 android:text="一共18元"/>
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:gravity="right"
-            android:layout_height="wrap_content">
-            <Button
-                android:id="@+id/btn_detail"
-                android:layout_width="80dp"
-                android:layout_height="35dp"
-                android:textSize="14sp"
-                android:text="查看详情"/>
 
-            <Button
-                android:id="@+id/btn_ensure"
-                android:layout_width="80dp"
-                android:background="@color/primary_pressed"
-                android:layout_height="35dp"
-                android:layout_marginLeft="5dp"
-                android:textSize="14sp"
-                android:text="确认收货"/>
-            </LinearLayout>
+
     </LinearLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/layout_order_unfinished_bottom"></include>
+    </FrameLayout>
 </LinearLayout>
