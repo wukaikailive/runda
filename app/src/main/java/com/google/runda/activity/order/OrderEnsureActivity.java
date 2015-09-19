@@ -14,11 +14,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.runda.R;
+import com.google.runda.event.OrderAddressChangedEvent;
+import com.google.runda.event.OrderReceiveDateChangeEvent;
 import com.google.runda.event.PlaceOrderFailEvent;
 import com.google.runda.event.PlaceOrderSucceedEvent;
+import com.google.runda.interfaces.IArgModel;
+import com.google.runda.interfaces.IHolder;
 import com.google.runda.model.Commodity;
 import com.google.runda.model.PlaceOrderFormModel;
 import com.google.runda.staticModel.ServerConfig;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import de.greenrobot.event.EventBus;
 
@@ -50,7 +57,7 @@ public class OrderEnsureActivity extends Activity implements View.OnClickListene
         EventBus.getDefault().unregister(this);
     }
 
-    class ArgModel{
+    class ArgModel implements IArgModel {
         int num;//购买数量
         float totalPrice;//总价
         String storeName;//水站名字
@@ -58,6 +65,7 @@ public class OrderEnsureActivity extends Activity implements View.OnClickListene
         com.google.runda.model.Commodity commodity;//水的详情
         com.google.runda.model.User user;//用户信息
 
+        @Override
         public void init(Intent intent){
             Bundle bundle=intent.getExtras();
             num=bundle.getInt("num");
@@ -67,9 +75,9 @@ public class OrderEnsureActivity extends Activity implements View.OnClickListene
             user= ServerConfig.USER;
             totalPrice=Float.parseFloat(commodity.waterGoodsPrice)*num;
         }
-
+        @Override
         public void bindValueOfView(){
-            ensureOrderHolder.tvReceiverName.setText(user.Name);
+            ensureOrderHolder.tvReceiverName.setText(user.RealName==null?"":user.RealName);
             ensureOrderHolder.tvReceiverPhone.setText(user.CellPhone);
             ensureOrderHolder.tvReceiverDetailAddress.setText(user.DetailAddress);
 
@@ -79,6 +87,13 @@ public class OrderEnsureActivity extends Activity implements View.OnClickListene
             ensureOrderHolder.tvNum.setText(String.valueOf(num));
 
             ensureOrderHolder.tvTotalPrice.setText(String.valueOf(totalPrice));
+
+            Date t=new Date();
+            Long time=t.getTime();
+            time+=1*60*60*1000;
+            Date sendDate=new Date(time);
+            SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            ensureOrderHolder.tvSendTime.setText(sf.format(sendDate));
         }
     }
 
@@ -91,9 +106,19 @@ public class OrderEnsureActivity extends Activity implements View.OnClickListene
                 break;
             case R.id.lila_set_address:
                 //todo 设置收货地址
+                Intent intent=new Intent(this,OrderChangeAddressActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putString("receiverName",ensureOrderHolder.tvReceiverName.getText().toString());
+                bundle.putString("receiverPhone",ensureOrderHolder.tvReceiverPhone.getText().toString());
+                bundle.putString("region",argModel.user.Province+argModel.user.City+argModel.user.County);
+                bundle.putString("detailAddress",ensureOrderHolder.tvReceiverDetailAddress.getText().toString());
+                intent.putExtras(bundle);
+                startActivity(intent);
                 break;
             case R.id.lila_set_send_time:
                 //todo 设置可收货时间
+                Intent intent1=new Intent(this, OrderChangeReceiveDateActivity.class);
+                startActivity(intent1);
                 break;
             case R.id.btn_ensure_order:
                 //todo 确认收货 记得发送付款方式
@@ -112,7 +137,7 @@ public class OrderEnsureActivity extends Activity implements View.OnClickListene
                 ensureOrderHolder.btnEnsureOrder.setEnabled(false);
 
                 //下单开始
-                new com.google.runda.bll.Order().beginPalceOrder(model);
+                new com.google.runda.bll.Order().beginPlaceOrder(model);
                 break;
         }
     }
@@ -120,7 +145,7 @@ public class OrderEnsureActivity extends Activity implements View.OnClickListene
     /**
      * 订单确认界面的 view holder
      */
-    class  EnsureOrderHolder{
+    class EnsureOrderHolder implements IHolder {
 
         LinearLayout lilaBack;//返回上一界面
         LinearLayout lilaSerAddress;//设置地址
@@ -144,6 +169,7 @@ public class OrderEnsureActivity extends Activity implements View.OnClickListene
         /**
          * find id,bind holder's view
          */
+        @Override
         public void init(){
 
             lilaBack= (LinearLayout) findViewById(R.id.lila_back);
@@ -168,6 +194,17 @@ public class OrderEnsureActivity extends Activity implements View.OnClickListene
             proBarWaitEnsureOrder.setVisibility(View.INVISIBLE);
         }
 
+        @Override
+        public void hide() {
+
+        }
+
+        @Override
+        public void show() {
+
+        }
+
+        @Override
         public void bindClickEvent(View.OnClickListener listener){
             lilaBack.setOnClickListener(listener);
             lilaSerAddress.setOnClickListener(listener);
@@ -175,7 +212,6 @@ public class OrderEnsureActivity extends Activity implements View.OnClickListene
             btnEnsureOrder.setOnClickListener(listener);
         }
     }
-
 
     /**
      * 事件处理
@@ -186,11 +222,23 @@ public class OrderEnsureActivity extends Activity implements View.OnClickListene
 
         this.finish();
     }
+
     //下订单失败事件
     public void onEventMainThread(PlaceOrderFailEvent event){
         Toast.makeText(this,"下订单失败啦!原因："+event.getMessage(),Toast.LENGTH_LONG).show();
         ensureOrderHolder.proBarWaitEnsureOrder.setVisibility(View.INVISIBLE);
         ensureOrderHolder.btnEnsureOrder.setEnabled(true);
+    }
+
+    //修改收货地址事件
+    public void onEventMainThread(OrderAddressChangedEvent event){
+        ensureOrderHolder.tvReceiverName.setText(event.userName);
+        ensureOrderHolder.tvReceiverPhone.setText(event.userPhone);
+        ensureOrderHolder.tvReceiverDetailAddress.setText(event.detailAddress);
+    }
+
+    public void onEventMainThread(OrderReceiveDateChangeEvent event){
+        ensureOrderHolder.tvSendTime.setText(event.date+" "+event.time);
     }
 
 }

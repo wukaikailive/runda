@@ -1,11 +1,11 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <style name="AppTheme" parent="Theme.AppCompat.CompactMenu">
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="AnimActivityTheme" parent="Theme.Base.Light">
+    <style name="AnimActivityTheme" parent="Theme.AppCompat.Light">
         <item name="android:windowAnimationStyle">@style/FeelyouWindowAnimTheme</item>
     </style>
 
@@ -19,5 +19,23 @@
     <style name="Dialog_Fullscreen">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="Hint">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/hint_color</item>
+    </style>
+
+    <style name="HintButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingBottom">15dp</item>
+        <item name="android:paddingLeft">35dp</item>
+        <item name="android:paddingRight">35dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:background">@drawable/hint_button_bg</item>
     </style>
 </resources>

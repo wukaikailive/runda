@@ -1,213 +1,195 @@
 package com.google.runda.fragment;
 
-import android.app.ListFragment;
-import android.content.Intent;
+
 import android.os.Bundle;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.runda.R;
-import com.google.runda.activity.order.OrderDetailActivity;
-import com.google.runda.event.PullOrdersFailEvent;
-import com.google.runda.event.PullOrdersSucceedEvent;
-import com.google.runda.model.Order;
-import com.google.runda.view.XListView;
-
-import java.util.ArrayList;
-
-import de.greenrobot.event.EventBus;
+import com.google.runda.interfaces.IHolder;
 
 /**
  * Created by 凯凯 on 2015/3/20.
  */
-public class OrdersFragment extends ListFragment implements XListView.IXListViewListener ,View.OnClickListener{
+public class OrdersFragment extends Fragment implements View.OnClickListener{
 
-    XListView xListView;
-    ArrayList<com.google.runda.model.Order> orders=new ArrayList<Order>();
 
-    OrdersAdapter ordersAdapter;
-    int size=6;
-    int moreSize=4;
+    FragmentManager fm;
+    FragmentTransaction transaction;
 
-    LinearLayout mLilaStores;
-    LinearLayout mLilaLoading;
-    LinearLayout mLilaLoadFail;
-    Button mBtnRetry;
+    OrdersHolder ordersHolder;
+
+    private Fragment mFragment_1;
+    private Fragment mFragment_2;
+    private Fragment mFragment_3;
+    private Fragment mFragment_4;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView= inflater.inflate(R.layout.fragment_0_3,container,false);
-        xListView= (XListView) rootView.findViewById(android.R.id.list);
-        mLilaStores= (LinearLayout) rootView.findViewById(R.id.lila_stores);
-        mLilaLoading= (LinearLayout) rootView.findViewById(R.id.lila_loading);
-        mLilaLoadFail= (LinearLayout) rootView.findViewById(R.id.lila_load_fail);
-        mBtnRetry= (Button) rootView.findViewById(R.id.btn_retry);
-        hideAll();
-        showLoading();
-        mBtnRetry.setOnClickListener(this);
-        xListView.setXListViewListener(this);
-        xListView.setPullLoadEnable(true);
-        return rootView;
+        return inflater.inflate(R.layout.fragment_0_3, container, false);
+
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
-        ordersAdapter =new OrdersAdapter();
-        setListAdapter(ordersAdapter);
-        onRefresh();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onRefresh() {
-        new com.google.runda.bll.Order().beginPullOrders();
-    }
-
-    @Override
-    public void onLoadMore() {
-        size+=moreSize;
-        new com.google.runda.bll.Order().beginPullOrders();
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ordersHolder=new OrdersHolder();
+        ordersHolder.init();
+        ordersHolder.hide();
+        ordersHolder.bindClickEvent(this);
+        if(savedInstanceState==null){
+            setSelect(1);
+        }
     }
 
     @Override
     public void onClick(View v) {
+        ordersHolder.hide();
         switch (v.getId()){
-            case R.id.btn_retry:
-                onRefresh();
-                showLoading();
+            case R.id.frame_unfinished:
+                setSelect(1);
+                break;
+            case R.id.frame_all_done:
+                setSelect(2);
+                break;
+            case R.id.frame_fail:
+                setSelect(3);
+                break;
+            case R.id.frame_all:
+                setSelect(4);
                 break;
         }
     }
 
-    private void showLoading(){
-        mLilaStores.setVisibility(View.INVISIBLE);
-        mLilaLoadFail.setVisibility(View.INVISIBLE);
-        mLilaLoading.setVisibility(View.VISIBLE);
-    }
-    void showOrders(){
-        mLilaStores.setVisibility(View.VISIBLE);
-        mLilaLoadFail.setVisibility(View.INVISIBLE);
-        mLilaLoading.setVisibility(View.INVISIBLE);
-    }
-    void showLoadFail(){
-        mLilaStores.setVisibility(View.INVISIBLE);
-        mLilaLoading.setVisibility(View.INVISIBLE);
-        mLilaLoadFail.setVisibility(View.VISIBLE);
-    }
-    void hideAll(){
-        mLilaStores.setVisibility(View.INVISIBLE);
-        mLilaLoading.setVisibility(View.INVISIBLE);
-        mLilaLoadFail.setVisibility(View.INVISIBLE);
-    }
-
-    class OrdersAdapter extends BaseAdapter{
-        private LayoutInflater mInflater= LayoutInflater.from(getActivity());
-        @Override
-        public int getCount() {
-            return orders.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return orders.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            final com.google.runda.model.Order order= orders.get(position);
-            Holder holder=null;
-            if(convertView==null){
-                convertView = mInflater.inflate(R.layout.list_item_order, parent,false);
-                holder=new Holder();
-                holder.tvStoreName= (TextView) convertView.findViewById(R.id.tv_store_name);
-                holder.tvStatus=(TextView)convertView.findViewById(R.id.tv_status);
-                holder.ivWater=(ImageView)convertView.findViewById(R.id.iv_water);
-                holder.tvDescription= (TextView) convertView.findViewById(R.id.tv_description);
-                holder.tvPrice= (TextView) convertView.findViewById(R.id.tv_price);
-                holder.tvNum= (TextView) convertView.findViewById(R.id.tv_num);
-                holder.tvTotalPrice= (TextView) convertView.findViewById(R.id.tv_total_price);
-                holder.tvTotalNum= (TextView) convertView.findViewById(R.id.tv_total_num);
-                holder.btnEnsure= (Button) convertView.findViewById(R.id.btn_ensure);
-                holder.btnDetail= (Button) convertView.findViewById(R.id.btn_detail);
-
-                convertView.setTag(holder);
-            }else{
-                holder=(Holder)convertView.getTag();
-            }
-
-            holder.tvStoreName.setText(order.WaterStoreName);
-            holder.tvStatus.setText(String.valueOf(order.Status));
-            holder.btnDetail.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Intent intent=new Intent(getActivity(), OrderDetailActivity.class);
-                    getActivity().startActivity(intent);
+    private void setSelect(int position){
+        fm=getChildFragmentManager();
+        transaction=fm.beginTransaction();
+        hideFragment();
+        switch (position){
+            case 1:
+                if (mFragment_1 == null) {
+                    mFragment_1 = new UnfinishedOrdersFragment();
+                    transaction.add(R.id.content, mFragment_1);
+                } else {
+                    transaction.show(mFragment_1);
                 }
-            });
-//todo full
-            return convertView;
+                ordersHolder.show(1);
+                break;
+            case 2:
+                if (mFragment_2 == null) {
+                    mFragment_2 = new UnfinishedOrdersFragment();
+                    transaction.add(R.id.content, mFragment_2);
+                } else {
+                    transaction.show(mFragment_2);
+                }
+                ordersHolder.show(2);
+                break;
+            case 3:
+                if (mFragment_3 == null) {
+                    mFragment_3 = new UnfinishedOrdersFragment();
+                    transaction.add(R.id.content, mFragment_3);
+                } else {
+                    transaction.show(mFragment_3);
+                }
+                ordersHolder.show(3);
+                break;
+            case 4:
+                if (mFragment_4 == null) {
+                    mFragment_4 = new UnfinishedOrdersFragment();
+                    transaction.add(R.id.content, mFragment_4);
+                } else {
+                    transaction.show(mFragment_4);
+                }
+                ordersHolder.show(4);
+                break;
+        }
+        transaction.commit();
+    }
+
+    private void hideFragment(){
+        if (mFragment_1 != null) {
+            transaction.hide(mFragment_1);
+        }
+        if (mFragment_2 != null) {
+            transaction.hide(mFragment_2);
+        }
+        if (mFragment_3 != null) {
+            transaction.hide(mFragment_3);
+        }
+        if (mFragment_4 != null) {
+            transaction.hide(mFragment_4);
+        }
+    }
+
+    class OrdersHolder implements IHolder{
+
+
+        FrameLayout frameUnfinished;
+        FrameLayout frameAllDone;
+        FrameLayout frameFail;
+        FrameLayout frameAll;
+
+        LinearLayout lilaUnfinished;
+        LinearLayout lilaAllDone;
+        LinearLayout lilaFail;
+        LinearLayout lilaAll;
+        FrameLayout content;
+        @Override
+        public void init() {
+
+            frameUnfinished= (FrameLayout) getView().findViewById(R.id.frame_unfinished);
+            frameAllDone= (FrameLayout) getView().findViewById(R.id.frame_all_done);
+            frameFail= (FrameLayout) getView().findViewById(R.id.frame_fail);
+            frameAll= (FrameLayout) getView().findViewById(R.id.frame_all);
+
+            lilaUnfinished= (LinearLayout) getView().findViewById(R.id.lila_unfinished);
+            lilaAllDone= (LinearLayout) getView().findViewById(R.id.lila_all_done);
+            lilaFail= (LinearLayout) getView().findViewById(R.id.lila_fail);
+            lilaAll= (LinearLayout) getView().findViewById(R.id.lila_all);
+            content= (FrameLayout) getView().findViewById(R.id.content);
         }
 
-        class Holder{
-            TextView tvStoreName;
-            TextView tvStatus;
-            ImageView ivWater;
-            TextView tvDescription;
-            TextView tvPrice;
-            TextView tvNum;
-            TextView tvTotalPrice;
-            TextView tvTotalNum;
-            Button btnEnsure;
-            Button btnDetail;
+        @Override
+        public void hide() {
+            lilaUnfinished.setVisibility(View.INVISIBLE);
+            lilaAllDone.setVisibility(View.INVISIBLE);
+            lilaFail.setVisibility(View.INVISIBLE);
+            lilaAll.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        public void show() {
+
+        }
+        public void show(int position){
+            switch (position){
+                case 1:
+                    lilaUnfinished.setVisibility(View.VISIBLE);
+                    break;
+                case 2:
+                    lilaAllDone.setVisibility(View.VISIBLE);
+                    break;
+                case 3:
+                    lilaFail.setVisibility(View.VISIBLE);
+                    break;
+                case 4:
+                    lilaAll.setVisibility(View.VISIBLE);
+                    break;
+            }
+        }
+
+        @Override
+        public void bindClickEvent(View.OnClickListener listener) {
+            frameUnfinished.setOnClickListener(listener);
+            frameAllDone.setOnClickListener(listener);
+            frameFail.setOnClickListener(listener);
+            frameAll.setOnClickListener(listener);
         }
     }
-
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        Toast.makeText(this.getActivity(),"你点击了第"+(position-1),Toast.LENGTH_SHORT).show();
-    }
-
-
-    /*EventBus - - 响应开始*/
-
-    public void onEventMainThread(PullOrdersSucceedEvent event){
-        orders= (ArrayList<com.google.runda.model.Order>) event.getData();
-        xListView.stopRefresh();
-        xListView.stopLoadMore();
-        ordersAdapter.notifyDataSetChanged();
-        xListView.setRefreshTime("刚刚");
-        //Toast.makeText(this.getActivity(),"数据加载成功",Toast.LENGTH_SHORT).show();
-        showOrders();
-    }
-
-    public void onEventMainThread(PullOrdersFailEvent event){
-        Toast.makeText(this.getActivity(),"数据加载失败 "+event.getMessage(),Toast.LENGTH_SHORT).show();
-        showLoadFail();
-    }
-    /*EventBus - - 响应结束*/
 }

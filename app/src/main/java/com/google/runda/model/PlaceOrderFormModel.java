@@ -5,15 +5,15 @@ package com.google.runda.model;
  */
 public class PlaceOrderFormModel {
 
-    public String waterGoodsID; //水id
-    public String waterGoodsCount; //数量
-    public String waterGoodsPrice; //价格
+    public String waterGoodsID; //姘磇d
+    public String waterGoodsCount; //鏁伴噺
+    public String waterGoodsPrice; //浠锋牸
 
-    public String waterStoreID; //水店id
+    public String waterStoreID; //姘村簵id
     public String recieverPersonName;//
     public String recieverPersonPhone;
     public String recieverAddress;
-    public String recieverTime;//收货时间
-    public String remark;//备注
-    public String settleMethod="货到付款";
+    public String recieverTime;//鏀惰揣鏃堕棿
+    public String remark;//澶囨敞
+    public String settleMethod="璐у埌浠樻";
 }

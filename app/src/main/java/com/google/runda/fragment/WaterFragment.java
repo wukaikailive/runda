@@ -137,7 +137,7 @@ public class WaterFragment extends ListFragment implements XListView.IXListViewL
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            final com.google.runda.model.Store store= (com.google.runda.model.Store) stores.get(position);
+            final com.google.runda.model.Store store= stores.get(position);
             Holder holder=null;
             if (convertView==null)
             {

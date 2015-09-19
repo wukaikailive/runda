@@ -26,6 +26,9 @@ import com.google.runda.event.DoActivityFinishEvent;
 import com.google.runda.staticModel.ServerConfig;
 import com.google.runda.util.LoadImageTask;
 
+import java.util.Date;
+import java.util.UUID;
+
 import de.greenrobot.event.EventBus;
 
 /**
@@ -43,6 +46,7 @@ public class RegisterActivityStep2 extends Activity implements View.OnClickListe
     EditText mEtPhone;
     LinearLayout mLilaPassword;
     View mPasswordLayout;
+    EditText mEtUserName;
     EditText mEtPassword;
     EditText mEtPasswordEnsure;
     EditText mEtCheckCode;
@@ -74,7 +78,7 @@ public class RegisterActivityStep2 extends Activity implements View.OnClickListe
     void init() {
         mIvNext = (ImageView) findViewById(R.id.ivNext);
         mBtnCheck = (Button) findViewById(R.id.btn_check);
-        mProBarCheck= (ProgressBar) findViewById(R.id.pro_bar_check);
+        mProBarCheck = (ProgressBar) findViewById(R.id.pro_bar_check);
         mIvBack = (ImageView) findViewById(R.id.ivBack);
         mEtPhone = (EditText) findViewById(R.id.et_phone);
         mLilaPassword = (LinearLayout) findViewById(R.id.lila_password);
@@ -83,6 +87,7 @@ public class RegisterActivityStep2 extends Activity implements View.OnClickListe
         mBtnCheck.setOnClickListener(this);
         mIvBack.setOnClickListener(this);
 
+        mEtUserName = (EditText) mPasswordLayout.findViewById(R.id.et_user_name);
         mEtPassword = (EditText) mPasswordLayout.findViewById(R.id.et_password);
         mEtPasswordEnsure = (EditText) mPasswordLayout.findViewById(R.id.et_password_ensure);
         mEtCheckCode = (EditText) mPasswordLayout.findViewById(R.id.et_check_code);
@@ -171,10 +176,17 @@ public class RegisterActivityStep2 extends Activity implements View.OnClickListe
             case R.id.ivNext:
                 ServerConfig.USER.CellPhone = mEtPhone.getText().toString();
                 ServerConfig.USER.Sex = "保密";
-                ServerConfig.USER.Name = java.util.UUID.randomUUID().toString();
+                ServerConfig.USER.Name = mEtUserName.getText().toString()+UUID.randomUUID();
                 ServerConfig.USER.Password = mEtPassword.getText().toString();
                 ServerConfig.USER.CheckCode = mEtCheckCode.getText().toString();
-                startActivity(new Intent(RegisterActivityStep2.this, RegisterActivityStep3.class));
+                ServerConfig.USER.RealName=mEtUserName.getText().toString();
+
+                if (ServerConfig.USER.Name.trim().length() == 0) {
+                    Toast.makeText(this, "你还没有输入你的名字哦", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    startActivity(new Intent(RegisterActivityStep2.this, RegisterActivityStep3.class));
+                }
                 break;
             case R.id.ivBack:
                 this.finish();
@@ -183,6 +195,7 @@ public class RegisterActivityStep2 extends Activity implements View.OnClickListe
                 //异步验证手机号
                 String ex = "^0{0,1}(13[0-9]|15[7-9]|153|156|18[7-9])[0-9]{8}$";
                 String phone = mEtPhone.getText().toString();
+
                 if (phone.matches(ex)) {
                     //显示进度条
                     mProBarCheck.setVisibility(View.VISIBLE);

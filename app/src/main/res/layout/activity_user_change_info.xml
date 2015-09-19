@@ -11,7 +11,7 @@
 
         <LinearLayout
             android:id="@+id/lila_back"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal">
@@ -91,10 +91,11 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="详细地址" />
+                    android:layout_marginTop="10dp"
+                    android:text="详细地址:" />
 
                 <EditText
-                    android:id="@+id/et_detail_address"
+                    android:id="@+id/edt_detail_address"
                     android:layout_width="match_parent"
                     android:layout_height="100dp" />
             </LinearLayout>

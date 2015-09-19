@@ -43,6 +43,7 @@
         android:background="@color/white_dark">
 
         <ScrollView
+            android:id="@+id/scroll_order_detail"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -412,9 +413,11 @@
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
-
-
         <include layout="@layout/layout_order_ensure_bottom"></include>
+        <include layout="@layout/layout_order_comment_bottom"></include>
+
+        <include layout="@layout/layout_loading"></include>
+        <include layout="@layout/layout_load_fail"></include>
 
     </FrameLayout>
 

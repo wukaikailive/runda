@@ -10,4 +10,5 @@
     <color name="teal">#009688</color>
     <color name="grey_shallow">#bdbdbd</color>
     <color name="white_dark">#eeeeee</color>
+    <color name="hint_color">#cc000000</color>
 </resources>

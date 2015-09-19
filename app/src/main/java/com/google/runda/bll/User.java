@@ -207,7 +207,7 @@ public class User {
         rawParams.put("country", user.County);
         rawParams.put("detailAddress", user.DetailAddress);
         rawParams.put("nickName","");
-        rawParams.put("realName","");
+        rawParams.put("realName",user.RealName);
         rawParams.put("email","");
         return dal.post(ServerConfig.WAY_USER_REGISTER, rawParams);
 

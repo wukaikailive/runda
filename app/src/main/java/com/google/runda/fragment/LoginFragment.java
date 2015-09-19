@@ -13,16 +13,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.runda.R;
-import com.google.runda.activity.RegisterActivity;
 import com.google.runda.activity.register.RegisterActivityStep1;
 import com.google.runda.bll.Config;
 import com.google.runda.bll.User;
 import com.google.runda.event.DoChangeCheckcodeEvent;
-import com.google.runda.event.DoTransitionToLoginEvent;
 import com.google.runda.event.DoTransitionToMeEvent;
 import com.google.runda.event.LoginFailEvent;
 import com.google.runda.event.LoginSuccessEvent;
-import com.google.runda.event.RequestLoginOverEvent;
 import com.google.runda.staticModel.ServerConfig;
 import com.google.runda.util.LoadImageTask;
 
