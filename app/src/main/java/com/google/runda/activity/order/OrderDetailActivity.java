@@ -1,28 +1,40 @@
 package com.google.runda.activity.order;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.runda.R;
 import com.google.runda.interfaces.IArgModel;
 import com.google.runda.interfaces.IHolder;
+import com.google.runda.model.OrderModel;
+import com.google.runda.model.OrderStatus;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by bigface on 2015/9/12.
  */
-public class OrderDetailActivity extends Activity implements View.OnClickListener{
+public class OrderDetailActivity extends Activity{
 
     DetailOrderHolder detailOrderHolder;
     LoadingHolder loadingHolder;
     LoadFailHolder loadFailHolder;
+    ArgModel argModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,33 +42,222 @@ public class OrderDetailActivity extends Activity implements View.OnClickListene
         setContentView(R.layout.activity_order_detail);
         detailOrderHolder=new DetailOrderHolder();
         detailOrderHolder.init();
-        detailOrderHolder.bindClickEvent(this);
         detailOrderHolder.hide();
         loadingHolder=new LoadingHolder();
         loadingHolder.init();
-        loadingHolder.bindClickEvent(this);
 //        loadingHolder.hide();
         loadFailHolder =new LoadFailHolder();
         loadFailHolder.init();
-        loadFailHolder.bindClickEvent(this);
         loadFailHolder.hide();
+
+        argModel=new ArgModel();
+        argModel.init(getIntent());
+        argModel.bindValueOfView();
+        loadingHolder.hide();
+        detailOrderHolder.show();
     }
 
-    @Override
-    public void onClick(View v) {
-
-    }
 
     class ArgModel implements IArgModel{
-
+        OrderModel order;
         @Override
         public void init(Intent intent) {
             Bundle bundle=intent.getExtras();
-
+            order = (OrderModel) bundle.getSerializable("order");
         }
 
         @Override
         public void bindValueOfView() {
+
+            Date t=new Date(Long.parseLong(order.orderSubmitTime));
+            SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            detailOrderHolder.tvSubmitTime.setText(sf.format(t));
+            detailOrderHolder.tvStatus.setText(String.valueOf(OrderStatus.values()[Integer.parseInt(order.orderStatue)].getTag()));
+            detailOrderHolder.tvTotalPrice.setText("￥"+Integer.parseInt(order.waterGoodsCount)*Float.parseFloat(order.waterGoodsPrice));
+
+            detailOrderHolder.tvReceiverName.setText(order.recieverPersonName==null?"":order.recieverPersonName);
+            detailOrderHolder.tvReceiverPhone.setText(order.recieverPersonPhone==null?"":order.recieverPersonPhone);
+            detailOrderHolder.tvReceiverDetailAddress.setText(order.recieverAddress==null?"":order.recieverAddress);
+
+            detailOrderHolder.tvStoreName.setText(order.waterStoreName);
+            detailOrderHolder.tvDescription.setText(order.waterGoodsDescript);
+            detailOrderHolder.tvPrice.setText("￥"+order.waterGoodsPrice);
+            detailOrderHolder.tvNum.setText(order.waterGoodsCount);
+            detailOrderHolder.tvSendTime.setText(order.recieverTime);
+
+            detailOrderHolder.tvMessage.setText(order.remark);
+            detailOrderHolder.tvOrderId.setText("订单id:"+order.orderID);
+
+            switch (Integer.parseInt(order.orderStatue)){
+                case 0:
+                case 1:
+                case 3:
+                    detailOrderHolder.ensureOrderBottomHolder.btnEnsureOrder.setVisibility(View.GONE);
+                    detailOrderHolder.ensureOrderBottomHolder.show();
+                    break;
+                case 2:
+                case 5:
+                case 8:
+                    detailOrderHolder.commentOrderBottomHolder.btnCommentOrder.setVisibility(View.GONE);
+                    detailOrderHolder.commentOrderBottomHolder.show();
+                    break;
+                case 4:
+                    detailOrderHolder.ensureOrderBottomHolder.show();
+                    break;
+                case 6:
+                    detailOrderHolder.ensureOrderBottomHolder.btnDelayOrder.setVisibility(View.GONE);
+                    detailOrderHolder.ensureOrderBottomHolder.btnReminderOrder.setVisibility(View.GONE);
+                    detailOrderHolder.ensureOrderBottomHolder.btnCancelOrder.setVisibility(View.GONE);
+                    detailOrderHolder.ensureOrderBottomHolder.show();
+                    break;
+                case 7:
+                    detailOrderHolder.commentOrderBottomHolder.show();
+                    break;
+                default:
+                    break;
+            }
+
+            //todo 取消订单
+            detailOrderHolder.ensureOrderBottomHolder.btnCancelOrder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //显示基本的AlertDialog
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(OrderDetailActivity.this);
+                    builder.setMessage("你确认要取消订单吗？如果送水工已经在路上建议您等一等...！id="+order.orderID);
+                    builder.setPositiveButton("确认",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    new com.google.runda.bll.Order().beginCancelOrder(order.orderID);
+                                }
+                            });
+                    builder.setNegativeButton("取消",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+
+                                }
+                            });
+                    builder.show();
+                }
+            });
+            //todo 延迟订单
+            detailOrderHolder.ensureOrderBottomHolder.btnDelayOrder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Intent(OrderDetailActivity.this, OrderDelayReceiveDateActivity.class);
+                    Bundle bundle=new Bundle();
+                    bundle.getString("orderId",order.orderID);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+            });
+            //todo 确认订单
+            detailOrderHolder.ensureOrderBottomHolder.btnEnsureOrder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //显示基本的AlertDialog
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(OrderDetailActivity.this);
+                    builder.setMessage("请确认已经收到货，否则可能人财两空！id="+order.orderID);
+                    builder.setPositiveButton("确认",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    new com.google.runda.bll.Order().beginEnsureOrder(order.orderID);
+                                }
+                            });
+                    builder.setNegativeButton("取消",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+
+                                }
+                            });
+                    builder.show();
+                }
+            });
+            //todo 催单
+            detailOrderHolder.ensureOrderBottomHolder.btnReminderOrder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    new AlertDialog.Builder(OrderDetailActivity.this)
+                            .setTitle("拨打电话")
+                            .setSingleChoiceItems(new String[] {"水站："+order.waterStoreTellPhone}, 0,
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + order.waterStoreTellPhone));
+                                            startActivity(intent);
+                                        }
+                                    }
+                            )
+                            .setNegativeButton("取消", null)
+                            .show();
+
+                }
+            });
+            //todo 评价订单
+            detailOrderHolder.commentOrderBottomHolder.btnCommentOrder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    LayoutInflater inflater = LayoutInflater.from(OrderDetailActivity.this);
+                    View view = inflater.inflate(R.layout.layout_comment_order, null);
+                    final EditText edtCommentOrder = (EditText) view.findViewById(R.id.edt_comment_order);
+                    new AlertDialog.Builder(OrderDetailActivity.this)
+                            .setTitle("请输入你的评价")
+                            .setView(view)
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String comment = edtCommentOrder.getText().toString();
+                                    if (comment.trim().length() == 0) {
+                                        Toast.makeText(OrderDetailActivity.this, "还没入输入评价呢", Toast.LENGTH_SHORT).show();
+                                    }else{
+                                        new com.google.runda.bll.Order().beginCommentOrder(order.orderID,comment);
+                                    }
+                                }
+                            })
+                            .setNegativeButton("取消", null)
+                            .show();
+                }
+            });
+            //todo 删除订单
+            detailOrderHolder.commentOrderBottomHolder.btnDeleteOrder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //显示基本的AlertDialog
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(OrderDetailActivity.this);
+                    builder.setMessage("你确定要删除id="+order.orderID+"订单吗？此操作不可恢复！");
+                    builder.setPositiveButton("确认",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    new com.google.runda.bll.Order().beginDeleteOrder(order.orderID);
+                                }
+                            });
+                    builder.setNegativeButton("取消",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+
+                                }
+                            });
+                    builder.show();
+
+                }
+            });
+
+            detailOrderHolder.btnContactStore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new AlertDialog.Builder(OrderDetailActivity.this)
+                            .setTitle("拨打电话")
+                            .setSingleChoiceItems(new String[] {"水站："+order.waterStoreTellPhone}, 0,
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + order.waterStoreTellPhone));
+                                            startActivity(intent);
+                                        }
+                                    }
+                            )
+                            .setNegativeButton("取消", null)
+                            .show();
+                }
+            });
 
         }
     }
@@ -127,8 +328,6 @@ public class OrderDetailActivity extends Activity implements View.OnClickListene
         @Override
         public void show() {
             scrollOrderDetail.setVisibility(View.VISIBLE);
-            ensureOrderBottomHolder.show();
-            commentOrderBottomHolder.show();
         }
 
         @Override
@@ -270,6 +469,5 @@ public class OrderDetailActivity extends Activity implements View.OnClickListene
             btnRetry.setOnClickListener(listener);
         }
     }
-
 
 }

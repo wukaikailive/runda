@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lila_order_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white_dark"
@@ -8,13 +9,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:layout_marginTop="10dp"
         android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/lila_title"
             android:layout_width="match_parent"
+            android:background="@color/white"
             android:layout_height="wrap_content"
             >
 
@@ -23,22 +24,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_weight="0.25"
+                android:layout_weight="0.5"
                 android:text="store-name"
-                android:textSize="20dp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/tv_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/primary_pressed"
+                android:layout_marginRight="10dp"
                 android:layout_weight="0.75"
                 android:text="状态" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/lila_order_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
@@ -100,6 +104,8 @@
         <LinearLayout
             android:gravity="center|right"
             android:layout_width="match_parent"
+            android:layout_marginTop="1dp"
+            android:background="@color/white"
             android:layout_height="30dp">
 
             <TextView
@@ -125,8 +131,10 @@
     </LinearLayout>
     <FrameLayout
         android:layout_width="match_parent"
+        android:layout_marginTop="1dp"
         android:layout_height="wrap_content">
 
-        <include layout="@layout/layout_order_unfinished_bottom"></include>
+        <include layout="@layout/layout_order_ensure_bottom"></include>
+        <include layout="@layout/layout_order_comment_bottom"></include>
     </FrameLayout>
 </LinearLayout>

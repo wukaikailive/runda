@@ -10,9 +10,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.runda.R;
+import com.google.runda.event.CancelOrderFailEvent;
+import com.google.runda.event.CancelOrderSucceedEvent;
+import com.google.runda.event.CommentOrderFailEvent;
+import com.google.runda.event.CommentOrderSucceedEvent;
+import com.google.runda.event.DelayOrderFailEvent;
+import com.google.runda.event.DelayOrderSucceedEvent;
+import com.google.runda.event.DeleteOrderFailEvent;
+import com.google.runda.event.DeleteOrderSucceedEvent;
+import com.google.runda.event.EnsureOrderFailEvent;
+import com.google.runda.event.EnsureOrderSucceedEvent;
 import com.google.runda.interfaces.IHolder;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by 凯凯 on 2015/3/20.
@@ -30,6 +43,8 @@ public class OrdersFragment extends Fragment implements View.OnClickListener{
     private Fragment mFragment_3;
     private Fragment mFragment_4;
 
+    int selected=1;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_0_3, container, false);
@@ -39,6 +54,7 @@ public class OrdersFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        EventBus.getDefault().register(this);
         ordersHolder=new OrdersHolder();
         ordersHolder.init();
         ordersHolder.hide();
@@ -46,6 +62,12 @@ public class OrdersFragment extends Fragment implements View.OnClickListener{
         if(savedInstanceState==null){
             setSelect(1);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -68,44 +90,53 @@ public class OrdersFragment extends Fragment implements View.OnClickListener{
     }
 
     private void setSelect(int position){
+        selected=position;
         fm=getChildFragmentManager();
         transaction=fm.beginTransaction();
         hideFragment();
         switch (position){
             case 1:
-                if (mFragment_1 == null) {
-                    mFragment_1 = new UnfinishedOrdersFragment();
-                    transaction.add(R.id.content, mFragment_1);
-                } else {
-                    transaction.show(mFragment_1);
-                }
+//                if (mFragment_1 == null) {
+//                    mFragment_1 = new UnfinishedOrdersFragment();
+//                    transaction.add(R.id.content, mFragment_1);
+//                } else {
+//                    transaction.show(mFragment_1);
+//                }
+                mFragment_1 = new UnfinishedOrdersFragment();
+                transaction.add(R.id.content, mFragment_1);
                 ordersHolder.show(1);
                 break;
             case 2:
-                if (mFragment_2 == null) {
-                    mFragment_2 = new UnfinishedOrdersFragment();
-                    transaction.add(R.id.content, mFragment_2);
-                } else {
-                    transaction.show(mFragment_2);
-                }
+//                if (mFragment_2 == null) {
+//                    mFragment_2 = new AllDoneOrdersFragment();
+//                    transaction.add(R.id.content, mFragment_2);
+//                } else {
+//                    transaction.show(mFragment_2);
+//                }
+                mFragment_2 = new AllDoneOrdersFragment();
+                transaction.add(R.id.content, mFragment_2);
                 ordersHolder.show(2);
                 break;
             case 3:
-                if (mFragment_3 == null) {
-                    mFragment_3 = new UnfinishedOrdersFragment();
-                    transaction.add(R.id.content, mFragment_3);
-                } else {
-                    transaction.show(mFragment_3);
-                }
+//                if (mFragment_3 == null) {
+//                    mFragment_3 = new FailedOrdersFragment();
+//                    transaction.add(R.id.content, mFragment_3);
+//                } else {
+//                    transaction.show(mFragment_3);
+//                }
+                mFragment_3 = new FailedOrdersFragment();
+                transaction.add(R.id.content, mFragment_3);
                 ordersHolder.show(3);
                 break;
             case 4:
-                if (mFragment_4 == null) {
-                    mFragment_4 = new UnfinishedOrdersFragment();
-                    transaction.add(R.id.content, mFragment_4);
-                } else {
-                    transaction.show(mFragment_4);
-                }
+//                if (mFragment_4 == null) {
+//                    mFragment_4 = new AllOrdersFragment();
+//                    transaction.add(R.id.content, mFragment_4);
+//                } else {
+//                    transaction.show(mFragment_4);
+//                }
+                mFragment_4 = new AllOrdersFragment();
+                transaction.add(R.id.content, mFragment_4);
                 ordersHolder.show(4);
                 break;
         }
@@ -115,15 +146,19 @@ public class OrdersFragment extends Fragment implements View.OnClickListener{
     private void hideFragment(){
         if (mFragment_1 != null) {
             transaction.hide(mFragment_1);
+            mFragment_1.onDestroy();
         }
         if (mFragment_2 != null) {
             transaction.hide(mFragment_2);
+            mFragment_2.onDestroy();
         }
         if (mFragment_3 != null) {
             transaction.hide(mFragment_3);
+            mFragment_3.onDestroy();
         }
         if (mFragment_4 != null) {
             transaction.hide(mFragment_4);
+            mFragment_4.onDestroy();
         }
     }
 
@@ -192,4 +227,51 @@ public class OrdersFragment extends Fragment implements View.OnClickListener{
             frameAll.setOnClickListener(listener);
         }
     }
+
+
+    /**
+     * event
+     */
+
+    //删除订单
+    public void onEventMainThread(DeleteOrderSucceedEvent event){
+        Toast.makeText(getActivity(),"订单删除成功！",Toast.LENGTH_LONG).show();
+        setSelect(selected);
+    }
+    public void onEventMainThread(DeleteOrderFailEvent event){
+        Toast.makeText(getActivity(),"订单删除失败！原因："+event.getMessage(),Toast.LENGTH_LONG).show();
+    }
+    //确认收货
+    public void onEventMainThread(EnsureOrderSucceedEvent event){
+        Toast.makeText(getActivity(),"订单确认成功！",Toast.LENGTH_LONG).show();
+        setSelect(selected);
+    }
+    public void onEventMainThread(EnsureOrderFailEvent event){
+        Toast.makeText(getActivity(),"订单确认失败！原因："+event.getMessage(),Toast.LENGTH_LONG).show();
+    }
+    //取消订单
+    public void onEventMainThread(CancelOrderSucceedEvent event){
+        Toast.makeText(getActivity(),"订单取消成功！",Toast.LENGTH_LONG).show();
+        setSelect(selected);
+    }
+    public void onEventMainThread(CancelOrderFailEvent event){
+        Toast.makeText(getActivity(),"订单取消失败！原因："+event.getMessage(),Toast.LENGTH_LONG).show();
+    }
+    //延迟订单
+    public void onEventMainThread(DelayOrderSucceedEvent event){
+        Toast.makeText(getActivity(),"收货时间设置成功！",Toast.LENGTH_LONG).show();
+        setSelect(selected);
+    }
+    public void onEventMainThread(DelayOrderFailEvent event){
+        Toast.makeText(getActivity(),"收货时间设置失败！原因："+event.getMessage(),Toast.LENGTH_LONG).show();
+    }
+    //评价订单
+    public void onEventMainThread(CommentOrderSucceedEvent event){
+        Toast.makeText(getActivity(),"评价成功！",Toast.LENGTH_LONG).show();
+        setSelect(selected);
+    }
+    public void onEventMainThread(CommentOrderFailEvent event){
+        Toast.makeText(getActivity(),"评价失败！原因："+event.getMessage(),Toast.LENGTH_LONG).show();
+    }
+
 }

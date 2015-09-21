@@ -21,12 +21,15 @@
             <Button
                 android:id="@+id/btn_delete_order"
                 android:layout_width="wrap_content"
+                android:textSize="13sp"
                 android:layout_height="40dp"
                 android:text="删除订单" />
 
             <Button
                 android:id="@+id/btn_comment_order"
                 android:layout_width="wrap_content"
+                android:layout_marginRight="10dp"
+                android:textSize="13sp"
                 android:layout_height="40dp"
                 android:text="追加评价" />
 

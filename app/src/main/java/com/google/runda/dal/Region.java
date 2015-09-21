@@ -19,7 +19,7 @@ public class Region {
     public static HttpClient httpClient = CustomHttpClient.getHttpClient();
     public String get(String url) throws IOException {
         HttpGet get=new HttpGet(url);
-        if(null!= ServerConfig.PHPSESSID || (!ServerConfig.PHPSESSID.equals(""))){
+        if(!(null== ServerConfig.PHPSESSID || ServerConfig.PHPSESSID.equals(""))){
             //为了与服务端的session交互，将SESSIONID发给服务器
             get.setHeader("Cookie", "PHPSESSID=" + ServerConfig.PHPSESSID);
         }

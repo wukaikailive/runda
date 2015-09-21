@@ -2,12 +2,10 @@ package com.google.runda.fragment;
 
 import android.app.AlertDialog;
 import android.app.ListFragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,15 +15,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.runda.R;
 import com.google.runda.activity.order.OrderDelayReceiveDateActivity;
 import com.google.runda.activity.order.OrderDetailActivity;
-import com.google.runda.event.PullUnfinishedOrdersFailEvent;
-import com.google.runda.event.PullUnfinishedOrdersSucceedEvent;
+import com.google.runda.event.PullFailedOrdersFailEvent;
+import com.google.runda.event.PullFailedOrdersSucceedEvent;
 import com.google.runda.interfaces.IHolder;
 import com.google.runda.model.OrderModel;
 import com.google.runda.model.OrderStatus;
@@ -38,9 +35,9 @@ import de.greenrobot.event.EventBus;
 /**
  * Created by bigface on 2015/9/18.
  */
-public class UnfinishedOrdersFragment extends ListFragment implements View.OnClickListener, XListView.IXListViewListener {
+public class FailedOrdersFragment extends ListFragment implements View.OnClickListener, XListView.IXListViewListener {
 
-    int flag=1;
+    int flag=5;
     XListView xListView;
     ArrayList<OrderModel> orders = new ArrayList<OrderModel>();
 
@@ -199,17 +196,6 @@ public class UnfinishedOrdersFragment extends ListFragment implements View.OnCli
                 default:
                     break;
             }
-//            holder.btnDetail.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//
-//                    Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putSerializable("order", order);
-//                    intent.putExtras(bundle);
-//                    getActivity().startActivity(intent);
-//                }
-//            });
             holder.lilaOrderDetail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -225,7 +211,6 @@ public class UnfinishedOrdersFragment extends ListFragment implements View.OnCli
             holder.tvNum.setText("x" + order.waterGoodsCount);
             holder.tvTotalNum.setText("共" + order.waterGoodsCount + "件商品");
             holder.tvTotalPrice.setText("一共" + Integer.parseInt(order.waterGoodsCount) * Float.parseFloat(order.waterGoodsPrice) + "元");
-
 
             //todo 取消订单
             holder.ensureOrderBottomHolder.btnCancelOrder.setOnClickListener(new View.OnClickListener() {
@@ -520,7 +505,7 @@ public class UnfinishedOrdersFragment extends ListFragment implements View.OnCli
 
     /*EventBus - - 响应开始*/
 
-    public void onEventMainThread(PullUnfinishedOrdersSucceedEvent event) {
+    public void onEventMainThread(PullFailedOrdersSucceedEvent event) {
         orders = (ArrayList<com.google.runda.model.OrderModel>) event.getData();
         xListView.stopRefresh();
         xListView.stopLoadMore();
@@ -530,7 +515,7 @@ public class UnfinishedOrdersFragment extends ListFragment implements View.OnCli
         showOrders();
     }
 
-    public void onEventMainThread(PullUnfinishedOrdersFailEvent event) {
+    public void onEventMainThread(PullFailedOrdersFailEvent event) {
         Toast.makeText(this.getActivity(), "数据加载失败 " + event.getMessage(), Toast.LENGTH_SHORT).show();
         showLoadFail();
     }

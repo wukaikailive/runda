@@ -1,11 +1,12 @@
 package com.google.runda.event;
 
 /**
- * Created by bigface on 2015/9/10.
+ * Created by bigface on 2015/9/20.
  */
-public class PullOrdersFailEvent {
+public class PullCanceledOrdersFailEvent {
+
     String message;
-    public PullOrdersFailEvent(String message) {
+    public PullCanceledOrdersFailEvent(String message) {
         this.message=message;
     }
     public String getMessage(){

@@ -46,7 +46,7 @@ public class Store {
             }
         }
         post.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-        if(null!= ServerConfig.PHPSESSID || (!ServerConfig.PHPSESSID.equals(""))){
+        if(!(null== ServerConfig.PHPSESSID || ServerConfig.PHPSESSID.equals(""))){
             //为了与服务端的session交互，将SESSIONID发给服务器
             post.setHeader("Cookie", "PHPSESSID=" + ServerConfig.PHPSESSID);
         }
@@ -62,7 +62,7 @@ public class Store {
 
     public String get(String url) throws IOException {
         HttpGet get=new HttpGet(url);
-        if(null!= ServerConfig.PHPSESSID || (!ServerConfig.PHPSESSID.equals(""))){
+        if(!(null== ServerConfig.PHPSESSID || ServerConfig.PHPSESSID.equals(""))){
             //为了与服务端的session交互，将SESSIONID发给服务器
             get.setHeader("Cookie", "PHPSESSID=" + ServerConfig.PHPSESSID);
         }

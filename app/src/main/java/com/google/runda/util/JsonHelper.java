@@ -10,6 +10,7 @@ import com.google.runda.model.Brand;
 import com.google.runda.model.Category;
 import com.google.runda.model.Commodity;
 import com.google.runda.model.Order;
+import com.google.runda.model.OrderModel;
 import com.google.runda.model.Province;
 
 import java.lang.reflect.Method;
@@ -160,6 +161,12 @@ public class JsonHelper {
     public static List toOrderList(String jsonString) throws JsonSyntaxException {
         Gson gson = new Gson();
         List<Order> list = gson.fromJson(jsonString, new TypeToken<List<Order>>() {
+        }.getType());
+        return list;
+    }
+    public static List toOrderModelList(String jsonString) throws JsonSyntaxException {
+        Gson gson = new Gson();
+        List<OrderModel> list = gson.fromJson(jsonString, new TypeToken<List<OrderModel>>() {
         }.getType());
         return list;
     }

@@ -17,6 +17,7 @@ import com.google.runda.activity.user.ChangeInfoActivity;
 import com.google.runda.bll.Config;
 import com.google.runda.bll.User;
 import com.google.runda.event.ExitLoginEvent;
+import com.google.runda.event.LetMeRefreshEvent;
 import com.google.runda.event.PullUserDataFailEvent;
 import com.google.runda.event.PullUserDataSucceedEvent;
 import com.google.runda.staticModel.ServerConfig;
@@ -50,6 +51,8 @@ public class MeFragment extends android.app.Fragment implements View.OnClickList
     private Button mBtnRetry;
     private Button mBtnToLogin;
     private Button mBtnEdit;
+    private Button mBtnRefresh;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +94,7 @@ public class MeFragment extends android.app.Fragment implements View.OnClickList
         mBtnRetry= (Button) getView().findViewById(R.id.btn_retry);
         mBtnToLogin= (Button) getView().findViewById(R.id.btn_to_login);
         mBtnEdit= (Button) getView().findViewById(R.id.btnEdit);
+        mBtnRefresh= (Button) getView().findViewById(R.id.btnRefresh);
 
         //注册监听事件
         btnExitLogin.setOnClickListener(this);
@@ -98,6 +102,7 @@ public class MeFragment extends android.app.Fragment implements View.OnClickList
         mBtnRetry.setOnClickListener(this);
         mBtnToLogin.setOnClickListener(this);
         mBtnEdit.setOnClickListener(this);
+        mBtnRefresh.setOnClickListener(this);
         bindUserData();
     }
 
@@ -137,6 +142,11 @@ public class MeFragment extends android.app.Fragment implements View.OnClickList
                 break;
             case R.id.btnEdit:
                 getActivity().startActivity(new Intent(getActivity(), ChangeInfoActivity.class));
+                break;
+            case R.id.btnRefresh:
+                hideAll();
+                showLoading();
+                bindUserData();
                 break;
         }
     }
@@ -182,6 +192,13 @@ public class MeFragment extends android.app.Fragment implements View.OnClickList
         showLoadFail();
         Toast.makeText(getActivity(), event.getMessage() + "", Toast.LENGTH_SHORT).show();
 
+    }
+
+    public void onEventMainThread(LetMeRefreshEvent event) {
+        hideAll();
+        showLoading();
+        bindUserData();
+        Toast.makeText(getActivity(), event.getMessage() + "", Toast.LENGTH_SHORT).show();
     }
 
 }

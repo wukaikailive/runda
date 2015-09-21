@@ -1,8 +1,9 @@
 package com.google.runda.bll;
 
-import android.util.*;
 import android.util.Log;
 
+import com.google.runda.event.ChangeUserInfoFailEvent;
+import com.google.runda.event.ChangeUserInfoSucceedEvent;
 import com.google.runda.event.CheckCheckcodeFailEvent;
 import com.google.runda.event.CheckCheckcodeSucceedEvent;
 import com.google.runda.event.CheckPhoneFailEvent;
@@ -13,14 +14,13 @@ import com.google.runda.event.PullUserDataFailEvent;
 import com.google.runda.event.PullUserDataSucceedEvent;
 import com.google.runda.event.RegisterFailEvent;
 import com.google.runda.event.RegisterSucceedEvent;
-import com.google.runda.event.RequestLoginOverEvent;
 import com.google.runda.staticModel.ServerConfig;
+import com.google.runda.util.HttpUtil;
 import com.google.runda.util.JsonHelper;
 
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +34,7 @@ public class User {
 
     /**
      * 获取字符串验证码
+     *
      * @return
      * @throws IOException
      */
@@ -43,30 +44,32 @@ public class User {
     }
 
 /*登陆 - - 开始*/
+
     /**
-     *  登陆
+     * 登陆
+     *
      * @param loginName 登陆账号 - -用户名 或 电话号码
      * @param password  密码
      * @param checkCode 验证码
      * @param loginType 登陆类型 - - userName 或 phoneNumber
      * @return json字符串
      */
-    public String login(String loginName, String password, String checkCode,String loginType) throws IOException {
+    public String login(String loginName, String password, String checkCode, String loginType) throws IOException {
         Map<String, String> rawParams = new HashMap<String, String>();
         rawParams.put("passWord", password);
         rawParams.put("checkCode", checkCode);
-        if(loginType.equals("userName")){
+        if (loginType.equals("userName")) {
             rawParams.put("userName", loginName);
             return dal.post(ServerConfig.WAY_LOGIN_ROUTE_USERNAME, rawParams);
-        }else{
+        } else {
             rawParams.put("phoneNumber", loginName);
-            return dal.post(ServerConfig.WAY_LOGIN_ROUTE_PHONE,rawParams);
+            return dal.post(ServerConfig.WAY_LOGIN_ROUTE_PHONE, rawParams);
         }
     }
 
     LoginThread loginThread = null;
 
-    public void beginLogin(String loginName, String password, String checkCode,String loginType) {
+    public void beginLogin(String loginName, String password, String checkCode, String loginType) {
         synchronized (this) {
             if (loginThread != null) {
                 return;
@@ -75,7 +78,7 @@ public class User {
             loginThread.loginName = loginName;
             loginThread.password = password;
             loginThread.checkCode = checkCode;
-            loginThread.loginType=loginType;
+            loginThread.loginType = loginType;
             loginThread.start();
         }
     }
@@ -85,24 +88,25 @@ public class User {
         public String password;
         public String checkCode;
         public String loginType;
+
         @Override
         public void run() {
             com.google.runda.bll.Config bll = new Config();
             try {
-                String jsonString = login(loginName, password, checkCode,loginType);
+                String jsonString = login(loginName, password, checkCode, loginType);
                 Log.e("jsonString", jsonString + " ");
                 Map<String, String> result = JsonHelper.toMap(jsonString);
                 if (result.get("code").equals("200")) {
                     com.google.runda.model.Config model = bll.getDefaultConfig();
-                    if(loginType.equals("userName")){
+                    if (loginType.equals("userName")) {
                         model.userName = loginName;
-                    }else{
-                        model.phone=loginName;
+                    } else {
+                        model.phone = loginName;
                     }
                     model.password = password;
                     bll.setConfig(model);
                     EventBus.getDefault().post(new LoginSuccessEvent());
-                }else{
+                } else {
                     bll.setDefault();
                     EventBus.getDefault().post(new LoginFailEvent(result.get("message")));
                 }
@@ -118,7 +122,7 @@ public class User {
     }
 /*登陆 - - 结束*/
 
-/*加载用户信息 - - 开始*/
+    /*加载用户信息 - - 开始*/
     public String pullUserInfo() throws IOException {
         return dal.get(ServerConfig.WAY_USER_INFO);
     }
@@ -131,26 +135,27 @@ public class User {
                 return;
             }
             pullUserInfoThread = new PullUserInfoThread();
-            pullUserInfoThread.loginType=loginType;
+            pullUserInfoThread.loginType = loginType;
             pullUserInfoThread.start();
         }
     }
 
     class PullUserInfoThread extends Thread {
         public String loginType;
+
         @Override
         public void run() {
             try {
                 com.google.runda.bll.Config bllConfig = new Config();
-                String loginName="";
-                if(loginType.equals("userName")){
+                String loginName = "";
+                if (loginType.equals("userName")) {
                     loginName = bllConfig.getSetting("name");
-                }else {
-                    loginName=bllConfig.getSetting("phone");
+                } else {
+                    loginName = bllConfig.getSetting("phone");
                 }
                 String password = bllConfig.getSetting("password");
                 String checkCode = getCheckCodeString();
-                String jsonString = login(loginName, password, checkCode,loginType);
+                String jsonString = login(loginName, password, checkCode, loginType);
                 Map<String, String> result = JsonHelper.toMap(jsonString);
                 if (result.get("code").equals("200")) {
                     String jsonUser = pullUserInfo();
@@ -176,14 +181,14 @@ public class User {
                     //发送加载成功事件
                     EventBus.getDefault().post(new PullUserDataSucceedEvent());
                 } else {
-                    ServerConfig.USER=new com.google.runda.model.User();
+                    ServerConfig.USER = new com.google.runda.model.User();
                     //发送加载失败事件
                     EventBus.getDefault().post(new PullUserDataFailEvent(result.get("message")));
                 }
                 Log.e("jsonString", jsonString + " ");
 
             } catch (Exception e) {
-                ServerConfig.USER=new com.google.runda.model.User();
+                ServerConfig.USER = new com.google.runda.model.User();
                 //发送加载失败事件
                 EventBus.getDefault().post(new PullUserDataFailEvent(e.getLocalizedMessage()));
             }
@@ -194,7 +199,7 @@ public class User {
     }
 /*加载用户信息 - - 结束*/
 
-/*注册 - - 开始*/
+    /*注册 - - 开始*/
     public String register(com.google.runda.model.User user) throws IOException {
         Map<String, String> rawParams = new HashMap<String, String>();
         rawParams.put("userName", user.Name);
@@ -206,21 +211,22 @@ public class User {
         rawParams.put("city", user.City);
         rawParams.put("country", user.County);
         rawParams.put("detailAddress", user.DetailAddress);
-        rawParams.put("nickName","");
-        rawParams.put("realName",user.RealName);
-        rawParams.put("email","");
+        rawParams.put("nickName", "");
+        rawParams.put("realName", user.RealName);
+        rawParams.put("email", "");
         return dal.post(ServerConfig.WAY_USER_REGISTER, rawParams);
 
     }
 
-    RegisterThread registerThread=null;
+    RegisterThread registerThread = null;
+
     public void beginRegister(com.google.runda.model.User user) {
-        synchronized (this){
-            if(registerThread!=null){
+        synchronized (this) {
+            if (registerThread != null) {
                 return;
             }
-            registerThread=new RegisterThread();
-            registerThread.user=user;
+            registerThread = new RegisterThread();
+            registerThread.user = user;
             registerThread.start();
         }
     }
@@ -230,127 +236,197 @@ public class User {
 
         @Override
         public void run() {
-            String jsonString="";
+            String jsonString = "";
             try {
                 jsonString = register(user);
-                Log.e("register jsonString",""+jsonString);
-                Map<String,String> result=JsonHelper.toMap(jsonString);
-                String code=result.get("code");
-                if(code.equals("200")){
-                    com.google.runda.bll.Config bllConfig=new Config();
-                    bllConfig.setSetting("phone",ServerConfig.USER.CellPhone);
-                    bllConfig.setSetting("password",ServerConfig.USER.Password);
+                Log.e("register jsonString", "" + jsonString);
+                Map<String, String> result = JsonHelper.toMap(jsonString);
+                String code = result.get("code");
+                if (code.equals("200")) {
+                    com.google.runda.bll.Config bllConfig = new Config();
+                    bllConfig.setSetting("phone", ServerConfig.USER.CellPhone);
+                    bllConfig.setSetting("password", ServerConfig.USER.Password);
                     bllConfig.save();
                     EventBus.getDefault().post(new RegisterSucceedEvent());
-                }
-                else{
+                } else {
                     EventBus.getDefault().post(new RegisterFailEvent(result.get("message")));
                 }
             } catch (JSONException e) {
-                EventBus.getDefault().post(new RegisterFailEvent("数据解析错误 "+jsonString));
+                EventBus.getDefault().post(new RegisterFailEvent("数据解析错误 " + jsonString));
                 e.printStackTrace();
-            }catch (Exception e){
+            } catch (Exception e) {
                 EventBus.getDefault().post(new RegisterFailEvent(e.getLocalizedMessage()));
                 e.printStackTrace();
             }
 
-            synchronized (User.this){
-                registerThread=null;
+            synchronized (User.this) {
+                registerThread = null;
             }
         }
     }
 
 /*注册 - - 结束*/
 
-/*验证手机号 - - 开始*/
+    /*验证手机号 - - 开始*/
     public String checkPhone(String phone) throws IOException {
-        return dal.get(ServerConfig.WAY_CHECK_PHONE+phone);
+        return HttpUtil.get(ServerConfig.WAY_CHECK_PHONE + phone);
     }
-    CheckPhoneThread checkPhoneThread=null;
-    public void beginCheckPhone(String phone){
-        synchronized (this){
-            if(checkPhoneThread!=null){
+
+    CheckPhoneThread checkPhoneThread = null;
+
+    public void beginCheckPhone(String phone) {
+        synchronized (this) {
+            if (checkPhoneThread != null) {
                 return;
             }
-            checkPhoneThread=new CheckPhoneThread();
-            checkPhoneThread.phone=phone;
+            checkPhoneThread = new CheckPhoneThread();
+            checkPhoneThread.phone = phone;
             checkPhoneThread.start();
         }
     }
-    class CheckPhoneThread extends Thread{
+
+    class CheckPhoneThread extends Thread {
         public String phone;
 
         @Override
         public void run() {
-            String jsonString="";
+            String jsonString = "";
             try {
                 jsonString = checkPhone(phone);
-                Log.e("check_phone jsonString",""+jsonString);
-                Map<String,String> result=JsonHelper.toMap(jsonString);
-                String code=result.get("code");
-                if(code.equals("200")){
+                Log.e("check_phone jsonString", "" + jsonString);
+                Map<String, String> result = JsonHelper.toMap(jsonString);
+                String code = result.get("code");
+                if (code.equals("200")) {
                     EventBus.getDefault().post(new CheckPhoneSucceedEvent());
-                }
-                else{
+                } else {
                     EventBus.getDefault().post(new CheckPhoneFailEvent(result.get("message")));
                 }
             } catch (JSONException e) {
-                EventBus.getDefault().post(new CheckPhoneFailEvent("数据解析错误 "+jsonString));
+                EventBus.getDefault().post(new CheckPhoneFailEvent("数据解析错误 " + jsonString));
                 e.printStackTrace();
-            }catch (Exception e){
+            } catch (Exception e) {
                 EventBus.getDefault().post(new CheckPhoneFailEvent(e.getLocalizedMessage()));
                 e.printStackTrace();
             }
-            synchronized (User.this){
-                checkPhoneThread=null;
+            synchronized (User.this) {
+                checkPhoneThread = null;
             }
         }
     }
 /*验证手机号 - - 结束*/
 
-/*验证验证码 - - 开始*/
+    /*验证验证码 - - 开始*/
     public String checkCheckcode(String checkcode) throws IOException {
-        return dal.get(ServerConfig.WAY_CHECK_CHECKCODE+checkcode);
+        return HttpUtil.get(ServerConfig.WAY_CHECK_CHECKCODE + checkcode);
     }
 
-    CheckCheckcodeThread checkCheckcodeThread=null;
-    public void beginCheckCheckcode(String checkcode){
-        synchronized (this){
-            if(checkCheckcodeThread!=null){
+    CheckCheckcodeThread checkCheckcodeThread = null;
+
+    public void beginCheckCheckcode(String checkcode) {
+        synchronized (this) {
+            if (checkCheckcodeThread != null) {
                 return;
             }
-            checkCheckcodeThread=new CheckCheckcodeThread();
-            checkCheckcodeThread.checkcode=checkcode;
+            checkCheckcodeThread = new CheckCheckcodeThread();
+            checkCheckcodeThread.checkcode = checkcode;
             checkCheckcodeThread.start();
         }
     }
-    class CheckCheckcodeThread extends Thread{
+
+    class CheckCheckcodeThread extends Thread {
         public String checkcode;
+
         @Override
         public void run() {
-            String jsonString="";
+            String jsonString = "";
             try {
                 jsonString = checkCheckcode(checkcode);
-                Log.e("chcheckcode jsonString",""+jsonString);
-                Map<String,String> result=JsonHelper.toMap(jsonString);
-                String code=result.get("code");
-                if(code.equals("200")){
+                Log.e("chcheckcode jsonString", "" + jsonString);
+                Map<String, String> result = JsonHelper.toMap(jsonString);
+                String code = result.get("code");
+                if (code.equals("200")) {
                     EventBus.getDefault().post(new CheckCheckcodeSucceedEvent());
-                }
-                else{
+                } else {
                     EventBus.getDefault().post(new CheckCheckcodeFailEvent(result.get("message")));
                 }
             } catch (JSONException e) {
-                EventBus.getDefault().post(new CheckCheckcodeFailEvent("数据解析错误 "+jsonString));
+                EventBus.getDefault().post(new CheckCheckcodeFailEvent("数据解析错误 " + jsonString));
                 e.printStackTrace();
-            }catch (Exception e){
+            } catch (Exception e) {
                 EventBus.getDefault().post(new CheckCheckcodeFailEvent(e.getLocalizedMessage()));
                 e.printStackTrace();
             }
-            synchronized (User.this){
-                checkCheckcodeThread=null;
+            synchronized (User.this) {
+                checkCheckcodeThread = null;
             }
         }
     }
 /*验证验证码 - - 结束*/
+
+
+    /**
+     * 修改用户信息
+     * @param realName
+     * @param province
+     * @param city
+     * @param country
+     * @param detailAddress
+     */
+    public void beginChangeUserInfo(String realName,String province,String city,String country,String detailAddress){
+        synchronized (this){
+            if(changeUserInfoThread==null){
+                changeUserInfoThread=new ChangeUserInfoThread();
+                changeUserInfoThread.realName=realName;
+                changeUserInfoThread.province=province;
+                changeUserInfoThread.city=city;
+                changeUserInfoThread.country=country;
+                changeUserInfoThread.detailAddress=detailAddress;
+                changeUserInfoThread.start();
+            }
+        }
+    }
+
+    ChangeUserInfoThread changeUserInfoThread=null;
+
+    /**
+     *  修改用户信息
+     */
+    class ChangeUserInfoThread extends Thread{
+        public String realName;
+        public String province;
+        public String city;
+        public String country;
+        public String detailAddress;
+        @Override
+        public void run() {
+            String jsonString="";
+            try {
+                Map<String,String> map =new HashMap<>();
+                map.put("realName",realName);
+                map.put("province",province);
+                map.put("city",city);
+                map.put("country",country);
+                map.put("detailAddress",detailAddress);
+                jsonString = HttpUtil.post(ServerConfig.WAY_CHANGE_USER_INFO,map);
+                Log.e("orders jsonString", "" + jsonString);
+                Map<String,String> result= JsonHelper.toMap(jsonString);
+                String code=result.get("code");
+                if(code.equals("200")){
+                    EventBus.getDefault().post(new ChangeUserInfoSucceedEvent(result.get("message")));
+                }
+                else{
+                    EventBus.getDefault().post(new ChangeUserInfoFailEvent(code+" "+result.get("message")));
+                }
+            } catch (JSONException e) {
+                EventBus.getDefault().post(new ChangeUserInfoFailEvent("数据解析错误 "+jsonString));
+                e.printStackTrace();
+            }catch (Exception e){
+                EventBus.getDefault().post(new ChangeUserInfoFailEvent(e.getLocalizedMessage()));
+                e.printStackTrace();
+            }
+            synchronized (User.this){
+                changeUserInfoThread =null;
+            }
+        }
+    }
 }

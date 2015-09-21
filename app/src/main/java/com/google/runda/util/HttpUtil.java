@@ -116,8 +116,14 @@ public class HttpUtil {
 	}
 
 	//根据url获取位图
-	public static Bitmap getBitmap(String path,int dstWidth,int dstHeight) throws IOException {
+	public static Bitmap
+	getBitmap(String path,int dstWidth,int dstHeight) throws IOException {
         HttpGet get=new HttpGet(path);
+        if(!(null== ServerConfig.PHPSESSID || ServerConfig.PHPSESSID.equals(""))){
+            //为了与服务端的session交互，将SESSIONID发给服务器
+            get.setHeader("Cookie", "PHPSESSID=" + ServerConfig.PHPSESSID);
+        }
+        //get.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
         DefaultHttpClient client=new DefaultHttpClient();
         HttpResponse response=client.execute(get);
         if(response.getStatusLine().getStatusCode()== HttpStatus.SC_OK){
@@ -126,15 +132,18 @@ public class HttpUtil {
             Bitmap bitmap=BitmapFactory.decodeStream(is);
             is.close();
             //得到服务端Cookie
-            List<Cookie>cookies=client.getCookieStore().getCookies();
-            for(int i=0;i<cookies.size();i++){
-                //取得Cookie['JSESSIONID']的值存在静态变量中
-                if("PHPSESSID".equals(cookies.get(i).getName())){
-                    ServerConfig.PHPSESSID=cookies.get(i).getValue();
-                    break;
+            if((null == ServerConfig.PHPSESSID || (ServerConfig.PHPSESSID.equals("")))){
+                //如果为空那么将session写入缓存
+                List<Cookie>cookies=client.getCookieStore().getCookies();
+                for(int i=0;i<cookies.size();i++){
+                    //取得Cookie['JSESSIONID']的值存在静态变量中
+                    if("PHPSESSID".equals(cookies.get(i).getName())){
+                        ServerConfig.PHPSESSID=cookies.get(i).getValue();
+                        break;
+                    }
                 }
             }
-            Log.e("PHPSESSID", ServerConfig.PHPSESSID);
+            Log.e("PHPSESSID_checkcode", ServerConfig.PHPSESSID);
             return bitmap;
         }
         return null;
@@ -177,10 +186,10 @@ public class HttpUtil {
             }
         }
         post.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-        if(null!= ServerConfig.PHPSESSID || (!ServerConfig.PHPSESSID.equals(""))){
-            //为了与服务端的session交互，将SESSIONID发给服务器
-            post.setHeader("Cookie", "PHPSESSID=" + ServerConfig.PHPSESSID);
-        }
+		if(!(null== ServerConfig.PHPSESSID || ServerConfig.PHPSESSID.equals(""))){
+			//为了与服务端的session交互，将SESSIONID发给服务器
+			post.setHeader("Cookie", "PHPSESSID=" + ServerConfig.PHPSESSID);
+		}
         post.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
         HttpResponse httpResponse = httpClient.execute(post);
         if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK/*200*/) {
@@ -192,17 +201,28 @@ public class HttpUtil {
     }
 
     public static String get(String url) throws IOException {
-        HttpGet get=new HttpGet(url);
-        if(null!= ServerConfig.PHPSESSID || (!ServerConfig.PHPSESSID.equals(""))){
-            //为了与服务端的session交互，将SESSIONID发给服务器
-            get.setHeader("Cookie", "PHPSESSID=" + ServerConfig.PHPSESSID);
-        }
-        get.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
-        HttpResponse httpResponse = httpClient.execute(get);
-        if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK/*200*/) {
-            String result = EntityUtils.toString(httpResponse.getEntity());
-            return result;
-        }
-        return null;
-    }
+		HttpGet get=new HttpGet(url);
+		if(!(null== ServerConfig.PHPSESSID || ServerConfig.PHPSESSID.equals(""))){
+			//为了与服务端的session交互，将SESSIONID发给服务器
+			get.setHeader("Cookie", "PHPSESSID=" + ServerConfig.PHPSESSID);
+		}
+		get.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+		HttpResponse httpResponse = httpClient.execute(get);
+		if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK/*200*/) {
+			String result = EntityUtils.toString(httpResponse.getEntity());
+			return result;
+		}
+		return null;
+	}
+	public static String getWithNoSession(String url) throws IOException {
+		HttpGet get=new HttpGet(url);
+		get.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+		HttpResponse httpResponse = httpClient.execute(get);
+		if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK/*200*/) {
+			String result = EntityUtils.toString(httpResponse.getEntity());
+			return result;
+		}
+		return null;
+	}
+
 }

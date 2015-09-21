@@ -12,13 +12,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.runda.R;
 import com.google.runda.activity.register.BaseActivity;
+import com.google.runda.event.ChangeUserInfoFailEvent;
+import com.google.runda.event.ChangeUserInfoSucceedEvent;
+import com.google.runda.event.LetMeRefreshEvent;
 import com.google.runda.interfaces.IArgModel;
 import com.google.runda.interfaces.IHolder;
 import com.google.runda.staticModel.ServerConfig;
 
+import de.greenrobot.event.EventBus;
 import kankan.wheel.widget.OnWheelChangedListener;
 import kankan.wheel.widget.WheelView;
 import kankan.wheel.widget.adapters.ArrayWheelAdapter;
@@ -45,6 +50,7 @@ public class ChangeInfoActivity extends BaseActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_user_change_info);
+        EventBus.getDefault().register(this);
         changeUserInfoHolder=new ChangeUserInfoHolder();
         changeUserInfoHolder.init();
         changeUserInfoHolder.bindClickEvent(this);
@@ -57,6 +63,12 @@ public class ChangeInfoActivity extends BaseActivity implements View.OnClickList
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.lila_back:
@@ -66,7 +78,9 @@ public class ChangeInfoActivity extends BaseActivity implements View.OnClickList
                 showRegionDialog();
                 break;
             case R.id.btn_ensure_change:
-                //todo ensure change
+                String realName=changeUserInfoHolder.edtUserName.getText().toString();
+                String detailAddress=changeUserInfoHolder.edtDetailAddress.getText().toString();
+                new com.google.runda.bll.User().beginChangeUserInfo(realName,mCurrentProviceName,mCurrentCityName,mCurrentDistrictName,detailAddress);
                 break;
         }
     }
@@ -227,4 +241,14 @@ public class ChangeInfoActivity extends BaseActivity implements View.OnClickList
 
         mRegionDialog = mRegionBuilder.create();
     }
+
+    public void onEventMainThread(ChangeUserInfoSucceedEvent event){
+        //结束自己
+        EventBus.getDefault().post(new LetMeRefreshEvent("更新信息成功!"));
+        this.finish();
+    }
+    public void onEventMainThread(ChangeUserInfoFailEvent event){
+        Toast.makeText(this,"修改信息失败!原因"+event.getMessage(),Toast.LENGTH_LONG).show();
+    }
+
 }
